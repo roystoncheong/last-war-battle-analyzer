@@ -207,7 +207,15 @@ Please provide a detailed analysis in the following JSON format:
         "keyFactors": [
             { "factor": "factor name", "impact": "High/Medium/Low", "description": "explanation" }
         ],
-        "winReason": "summary explanation of why winner won"
+        "winReason": "summary explanation of why winner won",
+        "statAdvantages": {
+            "troopTierDiff": "description of tier advantage if visible (T10 vs T8, etc)",
+            "moraleAdvantage": "which side had morale advantage if visible",
+            "typeSynergy": "did either side have 5 same-type heroes for 20% bonus",
+            "speedAdvantage": "which side's support/CC heroes acted first",
+            "damageReduction": "any notable damage reduction advantages",
+            "exclusiveWeaponImpact": "how exclusive weapons affected the outcome"
+        }
     },
     "resources": {
         "gained": {},
@@ -242,6 +250,13 @@ SQUAD META KNOWLEDGE:
 17. AIRCRAFT SQUAD (Mid-Spender Meta): Optimal lineup is Lucius + Carlie (Front), D.Va + Morrison + Schuyler (Back). D.Va is top-tier nuke damage. Weak to Missile squads.
 18. MISSILE SQUAD (Whale Meta): Optimal lineup is Adam + McGregor (Front), Fiona + Tesla + Swift (Back). Excels at backline elimination and boss damage. Weak to Tank squads.
 19. Compare detected squad composition against optimal lineups and note deviations or suboptimal hero choices.
+
+COMBAT STATS KNOWLEDGE:
+20. PRIMARY STATS: ATK (raw damage), DEF (reduces incoming damage - at 1.4M+ HP, small DEF gains outperform flat HP), HP (total durability, important for shield-scaling heroes like Lucius)
+21. SQUAD MULTIPLIERS: Morale (higher morale = bonus damage, e.g. 1.1x = 110% damage), March Size (more troops = more total HP/damage), Type Synergy (5 same-type heroes = 20% damage boost)
+22. ADVANCED STATS: Damage Increase % (superior to flat ATK), Damage Reduction % (one of most powerful defensive stats), Physical/Energy Resistance (10% reduction each from Armor/Radar gear), Speed (turn order - critical for support heroes applying CC first)
+23. HIDDEN FACTORS: Unit Tier T10 provides massive power jumps over lower tiers, Mastery Trees provide up to +30% core stats/+20% damage/+10% reduction (not shown in squad power), Exclusive Weapons add unique mechanics (e.g. Lucius shield)
+24. When analyzing battle outcome, consider: troop tier differences, morale advantages, type synergy bonuses, damage reduction vs raw HP, and whether support heroes acted before enemy damage dealers
 
 Respond ONLY with the JSON object, no additional text.`;
 
@@ -451,7 +466,15 @@ Please provide a detailed analysis in the following JSON format:
         "keyFactors": [
             { "factor": "factor name", "impact": "High/Medium/Low", "description": "explanation" }
         ],
-        "winReason": "summary explanation of why winner won"
+        "winReason": "summary explanation of why winner won",
+        "statAdvantages": {
+            "troopTierDiff": "description of tier advantage if visible (T10 vs T8, etc)",
+            "moraleAdvantage": "which side had morale advantage if visible",
+            "typeSynergy": "did either side have 5 same-type heroes for 20% bonus",
+            "speedAdvantage": "which side's support/CC heroes acted first",
+            "damageReduction": "any notable damage reduction advantages",
+            "exclusiveWeaponImpact": "how exclusive weapons affected the outcome"
+        }
     },
     "resources": {
         "gained": {},
@@ -489,6 +512,13 @@ SQUAD META KNOWLEDGE:
 19. AIRCRAFT SQUAD (Mid-Spender Meta): Optimal lineup is Lucius + Carlie (Front), D.Va + Morrison + Schuyler (Back). D.Va is top-tier nuke damage. Weak to Missile squads.
 20. MISSILE SQUAD (Whale Meta): Optimal lineup is Adam + McGregor (Front), Fiona + Tesla + Swift (Back). Excels at backline elimination and boss damage. Weak to Tank squads.
 21. Compare detected squad composition against optimal lineups and note deviations or suboptimal hero choices.
+
+COMBAT STATS KNOWLEDGE:
+22. PRIMARY STATS: ATK (raw damage), DEF (reduces incoming damage - at 1.4M+ HP, small DEF gains outperform flat HP), HP (total durability, important for shield-scaling heroes like Lucius)
+23. SQUAD MULTIPLIERS: Morale (higher morale = bonus damage, e.g. 1.1x = 110% damage), March Size (more troops = more total HP/damage), Type Synergy (5 same-type heroes = 20% damage boost)
+24. ADVANCED STATS: Damage Increase % (superior to flat ATK), Damage Reduction % (one of most powerful defensive stats), Physical/Energy Resistance (10% reduction each from Armor/Radar gear), Speed (turn order - critical for support heroes applying CC first)
+25. HIDDEN FACTORS: Unit Tier T10 provides massive power jumps over lower tiers, Mastery Trees provide up to +30% core stats/+20% damage/+10% reduction (not shown in squad power), Exclusive Weapons add unique mechanics (e.g. Lucius shield)
+26. When analyzing battle outcome, consider: troop tier differences, morale advantages, type synergy bonuses, damage reduction vs raw HP, and whether support heroes acted before enemy damage dealers
 
 Respond ONLY with the JSON object, no additional text.`;
 

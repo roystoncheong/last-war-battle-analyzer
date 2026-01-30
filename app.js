@@ -307,6 +307,7 @@ class BattleAnalyzerApp {
                         <strong>Summary:</strong> ${battleAnalysis.winReason}
                     </div>
                 ` : ''}
+                ${this.renderStatAdvantages(battleAnalysis.statAdvantages)}
             </div>
         ` : '';
 
@@ -365,6 +366,37 @@ class BattleAnalyzerApp {
             ` : ''}
             <button class="toggle-raw" onclick="app.toggleRawData()">Show Raw Data</button>
             <div class="raw-data" id="rawData" style="display: none;">${JSON.stringify(analysis, null, 2)}</div>
+        `;
+    }
+
+    renderStatAdvantages(statAdv) {
+        if (!statAdv) return '';
+
+        const items = [
+            { key: 'troopTierDiff', label: 'Troop Tier', class: 'tier-adv' },
+            { key: 'moraleAdvantage', label: 'Morale', class: 'morale-adv' },
+            { key: 'typeSynergy', label: 'Type Synergy', class: 'synergy-adv' },
+            { key: 'speedAdvantage', label: 'Speed/Turn Order', class: 'speed-adv' },
+            { key: 'damageReduction', label: 'Damage Reduction', class: 'reduction-adv' },
+            { key: 'exclusiveWeaponImpact', label: 'Exclusive Weapons', class: 'weapon-adv' }
+        ];
+
+        const validItems = items.filter(item => statAdv[item.key] && statAdv[item.key] !== 'null' && statAdv[item.key] !== 'None' && statAdv[item.key] !== 'Not visible');
+
+        if (validItems.length === 0) return '';
+
+        return `
+            <div class="stat-advantages">
+                <h5>Stat & Mechanic Advantages</h5>
+                <div class="stat-adv-grid">
+                    ${validItems.map(item => `
+                        <div class="stat-adv-item ${item.class}">
+                            <span class="adv-label">${item.label}</span>
+                            <span class="adv-value">${statAdv[item.key]}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
         `;
     }
 

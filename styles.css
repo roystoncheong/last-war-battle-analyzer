@@ -2019,8 +2019,79 @@ body {
     color: var(--text-secondary);
 }
 
+/* Stat Advantages Section */
+.stat-advantages {
+    margin-top: 15px;
+    padding: 15px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+}
+
+.stat-advantages h5 {
+    color: var(--accent-info);
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.stat-adv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.stat-adv-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent-primary);
+}
+
+.stat-adv-item .adv-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.stat-adv-item .adv-value {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.stat-adv-item.tier-adv {
+    border-left-color: #ffd700;
+}
+
+.stat-adv-item.morale-adv {
+    border-left-color: #4ade80;
+}
+
+.stat-adv-item.synergy-adv {
+    border-left-color: #a78bfa;
+}
+
+.stat-adv-item.speed-adv {
+    border-left-color: #60a5fa;
+}
+
+.stat-adv-item.reduction-adv {
+    border-left-color: #f87171;
+}
+
+.stat-adv-item.weapon-adv {
+    border-left-color: #f7c548;
+}
+
 @media (max-width: 768px) {
     .squad-comp-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-adv-grid {
         grid-template-columns: 1fr;
     }
 }
