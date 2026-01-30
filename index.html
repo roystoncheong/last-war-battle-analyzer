@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Last War PVP Battle Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Last War Battle Analyzer</h1>
+            <p class="subtitle">Upload your PVP battle screenshots for AI-powered analysis</p>
+        </header>
+
+        <!-- API Key Section -->
+        <section class="api-section">
+            <div class="api-input-group">
+                <label for="apiKey">Claude API Key:</label>
+                <div class="api-input-wrapper">
+                    <input type="password" id="apiKey" placeholder="Enter your Anthropic API key">
+                    <button id="toggleApiKey" class="btn-icon" title="Show/Hide">Show</button>
+                    <button id="saveApiKey" class="btn-primary">Save</button>
+                </div>
+                <span class="api-status" id="apiStatus"></span>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">+</div>
+                    <h3>Drop Battle Screenshots Here</h3>
+                    <p>Upload multiple screenshots from the same battle for comprehensive analysis</p>
+                    <small style="color: var(--text-muted);">(Different tabs/views will be combined into one report)</small>
+                    <input type="file" id="fileInput" accept="image/*" multiple hidden>
+                </div>
+
+                <!-- Image Preview -->
+                <div class="preview-container" id="previewContainer">
+                    <h3>Screenshots for This Battle (<span id="fileCount">0</span>)</h3>
+                    <div class="preview-grid" id="previewGrid"></div>
+                    <div class="action-buttons">
+                        <button id="analyzeBtn" class="btn-analyze" disabled>
+                            Analyze Battle
+                        </button>
+                        <button id="clearBtn" class="btn-secondary">Clear All</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection">
+                <div class="results-header">
+                    <h2>Battle Analysis</h2>
+                    <div class="results-tabs">
+                        <button class="tab-btn active" data-tab="overview">Overview</button>
+                        <button class="tab-btn" data-tab="troops">Troops</button>
+                        <button class="tab-btn" data-tab="damage">Damage</button>
+                        <button class="tab-btn" data-tab="heroes">Heroes</button>
+                        <button class="tab-btn" data-tab="insights">Smart Insights</button>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div class="loading" id="loadingState">
+                    <div class="spinner"></div>
+                    <p id="loadingText">Analyzing battle screenshot...</p>
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="tab-content active" id="tab-overview">
+                    <div class="overview-grid" id="overviewContent">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-troops">
+                    <div class="troops-breakdown" id="troopsContent">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-damage">
+                    <div class="damage-stats" id="damageContent">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-heroes">
+                    <div class="heroes-info" id="heroesContent">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-insights">
+                    <div class="insights-content" id="insightsContent">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Screenshot Sources Info -->
+                <div class="screenshot-sources" id="screenshotSources">
+                    <!-- Shows which screenshots were used for analysis -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Battle History Sidebar -->
+        <aside class="history-sidebar" id="historySidebar">
+            <div class="sidebar-header">
+                <h3>Battle History</h3>
+                <button id="toggleHistory" class="btn-icon">&lt;</button>
+            </div>
+            <button id="generateInsightsBtn" class="btn-insights" style="display: none;">
+                Generate Smart Insights
+            </button>
+            <div class="history-list" id="historyList">
+                <!-- Populated by JS -->
+            </div>
+            <div class="history-stats" id="historyStats">
+                <!-- Populated by JS -->
+            </div>
+            <button id="clearHistory" class="btn-danger">Clear History</button>
+        </aside>
+
+        <!-- Mobile History Toggle -->
+        <button class="mobile-history-toggle" id="mobileHistoryToggle">
+            History
+        </button>
+    </div>
+
+    <script src="analyzer.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
