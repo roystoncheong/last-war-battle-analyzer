@@ -1,25 +1,28 @@
 /**
  * Last War Battle Analyzer - AI Vision Module
- * Uses Claude API for analyzing battle screenshots with smart multi-battle insights
+ * Uses backend proxy to securely call Claude API
  */
 
 class BattleAnalyzer {
     constructor() {
-        this.apiKey = localStorage.getItem('claude_api_key') || '';
-        this.apiEndpoint = 'https://api.anthropic.com/v1/messages';
+        // Use relative path for API - works on same domain
+        this.apiEndpoint = '/api/analyze';
+        this.usageEndpoint = '/api/usage';
+        this.lastUsageInfo = null;
     }
 
-    setApiKey(key) {
-        this.apiKey = key;
-        localStorage.setItem('claude_api_key', key);
-    }
-
-    getApiKey() {
-        return this.apiKey;
-    }
-
+    /**
+     * Check if API is ready (always true with backend)
+     */
     hasApiKey() {
-        return this.apiKey && this.apiKey.length > 0;
+        return true; // Backend handles the API key
+    }
+
+    /**
+     * Get last usage info
+     */
+    getUsageInfo() {
+        return this.lastUsageInfo;
     }
 
     /**
@@ -53,10 +56,6 @@ class BattleAnalyzer {
      * Analyze single battle screenshot using Claude Vision
      */
     async analyzeScreenshot(imageFile) {
-        if (!this.hasApiKey()) {
-            throw new Error('API key not set. Please enter your Claude API key.');
-        }
-
         const base64Image = await this.imageToBase64(imageFile);
         const mediaType = this.getMediaType(imageFile);
 
@@ -141,78 +140,33 @@ Important instructions:
 
 Respond ONLY with the JSON object, no additional text.`;
 
-        try {
-            const response = await fetch(this.apiEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': this.apiKey,
-                    'anthropic-version': '2023-06-01',
-                    'anthropic-dangerous-direct-browser-access': 'true'
-                },
-                body: JSON.stringify({
-                    model: 'claude-sonnet-4-20250514',
-                    max_tokens: 4096,
-                    messages: [
-                        {
-                            role: 'user',
-                            content: [
-                                {
-                                    type: 'image',
-                                    source: {
-                                        type: 'base64',
-                                        media_type: mediaType,
-                                        data: base64Image
-                                    }
-                                },
-                                {
-                                    type: 'text',
-                                    text: prompt
-                                }
-                            ]
+        const messages = [
+            {
+                role: 'user',
+                content: [
+                    {
+                        type: 'image',
+                        source: {
+                            type: 'base64',
+                            media_type: mediaType,
+                            data: base64Image
                         }
-                    ]
-                })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || `API error: ${response.status}`);
+                    },
+                    {
+                        type: 'text',
+                        text: prompt
+                    }
+                ]
             }
+        ];
 
-            const data = await response.json();
-            const content = data.content[0].text;
-
-            // Parse the JSON response
-            try {
-                const jsonMatch = content.match(/\{[\s\S]*\}/);
-                if (jsonMatch) {
-                    return JSON.parse(jsonMatch[0]);
-                }
-                throw new Error('No valid JSON found in response');
-            } catch (parseError) {
-                console.error('JSON parse error:', parseError);
-                return {
-                    rawResponse: content,
-                    parseError: true,
-                    notes: 'Could not parse structured data. See raw response.'
-                };
-            }
-        } catch (error) {
-            console.error('API call error:', error);
-            throw error;
-        }
+        return this.callApi(messages);
     }
 
     /**
      * Analyze multiple screenshots from the SAME battle and combine into one analysis
-     * Sends all images in a single API call for comprehensive analysis
      */
     async analyzeCombinedScreenshots(imageFiles, progressCallback) {
-        if (!this.hasApiKey()) {
-            throw new Error('API key not set. Please enter your Claude API key.');
-        }
-
         if (progressCallback) {
             progressCallback(0, imageFiles.length, 'Preparing images...');
         }
@@ -328,46 +282,58 @@ Important instructions:
 
 Respond ONLY with the JSON object, no additional text.`;
 
+        const messages = [
+            {
+                role: 'user',
+                content: [
+                    ...imageContents,
+                    {
+                        type: 'text',
+                        text: prompt
+                    }
+                ]
+            }
+        ];
+
+        return this.callApi(messages);
+    }
+
+    /**
+     * Call the backend API
+     */
+    async callApi(messages) {
         try {
             const response = await fetch(this.apiEndpoint, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': this.apiKey,
-                    'anthropic-version': '2023-06-01',
-                    'anthropic-dangerous-direct-browser-access': 'true'
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    model: 'claude-sonnet-4-20250514',
-                    max_tokens: 4096,
-                    messages: [
-                        {
-                            role: 'user',
-                            content: [
-                                ...imageContents,
-                                {
-                                    type: 'text',
-                                    text: prompt
-                                }
-                            ]
-                        }
-                    ]
-                })
+                body: JSON.stringify({ messages })
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || `API error: ${response.status}`);
+                if (response.status === 429) {
+                    throw new Error(data.error || 'Rate limit exceeded. Please wait before trying again.');
+                }
+                throw new Error(data.error || `API error: ${response.status}`);
             }
 
-            const data = await response.json();
+            // Store usage info
+            if (data.usage_info) {
+                this.lastUsageInfo = data.usage_info;
+            }
+
             const content = data.content[0].text;
 
             // Parse the JSON response
             try {
                 const jsonMatch = content.match(/\{[\s\S]*\}/);
                 if (jsonMatch) {
-                    return JSON.parse(jsonMatch[0]);
+                    const result = JSON.parse(jsonMatch[0]);
+                    result._usage = this.lastUsageInfo;
+                    return result;
                 }
                 throw new Error('No valid JSON found in response');
             } catch (parseError) {
@@ -375,8 +341,8 @@ Respond ONLY with the JSON object, no additional text.`;
                 return {
                     rawResponse: content,
                     parseError: true,
-                    screenshotsAnalyzed: imageFiles.length,
-                    notes: 'Could not parse structured data. See raw response.'
+                    notes: 'Could not parse structured data. See raw response.',
+                    _usage: this.lastUsageInfo
                 };
             }
         } catch (error) {
@@ -389,10 +355,6 @@ Respond ONLY with the JSON object, no additional text.`;
      * Generate smart insights from battle history using Claude
      */
     async generateSmartInsights(battleHistory) {
-        if (!this.hasApiKey()) {
-            throw new Error('API key not set.');
-        }
-
         if (battleHistory.length < 2) {
             return this.generateBasicInsights(battleHistory);
         }
@@ -517,44 +479,15 @@ Based on the battle data AND the game mechanics above, provide strategic insight
 IMPORTANT: Reference specific game mechanics in your recommendations. Be specific about counter relationships, formation bonuses, and morale advantages.
 Respond ONLY with the JSON object.`;
 
+        const messages = [
+            {
+                role: 'user',
+                content: prompt
+            }
+        ];
+
         try {
-            const response = await fetch(this.apiEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': this.apiKey,
-                    'anthropic-version': '2023-06-01',
-                    'anthropic-dangerous-direct-browser-access': 'true'
-                },
-                body: JSON.stringify({
-                    model: 'claude-sonnet-4-20250514',
-                    max_tokens: 4096,
-                    messages: [
-                        {
-                            role: 'user',
-                            content: prompt
-                        }
-                    ]
-                })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || `API error: ${response.status}`);
-            }
-
-            const data = await response.json();
-            const content = data.content[0].text;
-
-            try {
-                const jsonMatch = content.match(/\{[\s\S]*\}/);
-                if (jsonMatch) {
-                    return JSON.parse(jsonMatch[0]);
-                }
-                throw new Error('No valid JSON found');
-            } catch (parseError) {
-                return this.generateBasicInsights(battleHistory);
-            }
+            return await this.callApi(messages);
         } catch (error) {
             console.error('Smart insights error:', error);
             return this.generateBasicInsights(battleHistory);

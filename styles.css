@@ -69,8 +69,35 @@ body {
     font-size: 1.1rem;
 }
 
-/* API Section */
+/* Usage Banner */
+.usage-banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+}
+
+.usage-text {
+    color: var(--text-secondary);
+}
+
+.usage-text span {
+    color: var(--accent-info);
+    font-weight: 600;
+}
+
+.usage-remaining {
+    font-weight: 600;
+}
+
+/* Legacy API Section (kept for backwards compatibility) */
 .api-section {
+    display: none; /* Hidden - no longer needed */
     grid-column: 1 / -1;
     background: var(--bg-secondary);
     padding: 20px;
@@ -1146,6 +1173,36 @@ body {
     font-size: 1.3rem;
     font-weight: 700;
     border: 3px solid;
+}
+
+.grade-badge.large {
+    width: 80px;
+    height: 80px;
+    font-size: 2.5rem;
+    border-width: 4px;
+    margin-bottom: 10px;
+}
+
+/* Highlighted stat card */
+.stat-card.highlight {
+    background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-card));
+    border: 2px solid var(--accent-primary);
+    padding: 25px;
+}
+
+/* Analysis notes */
+.stat-card.analysis-notes {
+    background: var(--bg-tertiary);
+    border-left: 4px solid var(--accent-info);
+}
+
+.stat-card.analysis-notes .icon {
+    color: var(--accent-info);
+    margin-bottom: 10px;
+}
+
+.stat-card.analysis-notes .label {
+    color: var(--text-secondary);
 }
 
 /* No Data State */

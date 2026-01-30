@@ -1,6 +1,7 @@
 /**
  * Last War Battle Analyzer - Main Application
  * Supports multi-screenshot analysis with smart insights
+ * Uses backend proxy for API calls (no API key needed from users)
  */
 
 class BattleAnalyzerApp {
@@ -18,18 +19,18 @@ class BattleAnalyzerApp {
     init() {
         this.cacheElements();
         this.bindEvents();
-        this.loadApiKey();
         this.renderHistory();
         this.updateHistoryStats();
         this.updateInsightsButton();
+        this.updateAnalyzeButton();
     }
 
     cacheElements() {
-        // API Section
-        this.apiKeyInput = document.getElementById('apiKey');
-        this.toggleApiKeyBtn = document.getElementById('toggleApiKey');
-        this.saveApiKeyBtn = document.getElementById('saveApiKey');
-        this.apiStatus = document.getElementById('apiStatus');
+        // Usage Banner
+        this.usageBanner = document.getElementById('usageBanner');
+        this.usageCount = document.getElementById('usageCount');
+        this.usageLimit = document.getElementById('usageLimit');
+        this.usageRemaining = document.getElementById('usageRemaining');
 
         // Upload Section
         this.uploadZone = document.getElementById('uploadZone');
@@ -66,13 +67,6 @@ class BattleAnalyzerApp {
     }
 
     bindEvents() {
-        // API Key events
-        this.toggleApiKeyBtn.addEventListener('click', () => this.toggleApiKeyVisibility());
-        this.saveApiKeyBtn.addEventListener('click', () => this.saveApiKey());
-        this.apiKeyInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') this.saveApiKey();
-        });
-
         // Upload events
         this.uploadZone.addEventListener('click', () => this.fileInput.click());
         this.uploadZone.addEventListener('dragover', (e) => this.handleDragOver(e));
@@ -96,39 +90,23 @@ class BattleAnalyzerApp {
         this.generateInsightsBtn.addEventListener('click', () => this.generateSmartInsights());
     }
 
-    // API Key Management
-    loadApiKey() {
-        const savedKey = this.analyzer.getApiKey();
-        if (savedKey) {
-            this.apiKeyInput.value = savedKey;
-            this.showApiStatus('API key loaded', 'saved');
+    // Update usage display
+    updateUsageDisplay(usageInfo) {
+        if (!usageInfo) return;
+
+        this.usageCount.textContent = usageInfo.requests_today || 0;
+        this.usageLimit.textContent = usageInfo.daily_limit || 50;
+
+        const remaining = usageInfo.remaining || 0;
+        if (remaining <= 5) {
+            this.usageRemaining.textContent = `(${remaining} left today)`;
+            this.usageRemaining.style.color = 'var(--accent-danger)';
+        } else if (remaining <= 15) {
+            this.usageRemaining.textContent = `(${remaining} left today)`;
+            this.usageRemaining.style.color = 'var(--accent-secondary)';
+        } else {
+            this.usageRemaining.textContent = '';
         }
-    }
-
-    toggleApiKeyVisibility() {
-        const type = this.apiKeyInput.type === 'password' ? 'text' : 'password';
-        this.apiKeyInput.type = type;
-        this.toggleApiKeyBtn.textContent = type === 'password' ? 'Show' : 'Hide';
-    }
-
-    saveApiKey() {
-        const key = this.apiKeyInput.value.trim();
-        if (!key) {
-            this.showApiStatus('Please enter an API key', 'error');
-            return;
-        }
-        this.analyzer.setApiKey(key);
-        this.showApiStatus('API key saved!', 'saved');
-        this.updateAnalyzeButton();
-    }
-
-    showApiStatus(message, type) {
-        this.apiStatus.textContent = message;
-        this.apiStatus.className = `api-status ${type}`;
-        setTimeout(() => {
-            this.apiStatus.textContent = '';
-            this.apiStatus.className = 'api-status';
-        }, 3000);
     }
 
     // File Upload Handling
@@ -207,16 +185,12 @@ class BattleAnalyzerApp {
     }
 
     updateAnalyzeButton() {
-        this.analyzeBtn.disabled = this.selectedFiles.length === 0 || !this.analyzer.hasApiKey();
+        this.analyzeBtn.disabled = this.selectedFiles.length === 0;
     }
 
     // Battle Analysis - combines all screenshots into one battle analysis
     async analyzeBattles() {
         if (this.selectedFiles.length === 0) return;
-        if (!this.analyzer.hasApiKey()) {
-            this.showApiStatus('Please save your API key first', 'error');
-            return;
-        }
 
         this.showLoading(true);
         this.resultsSection.classList.add('active');
@@ -236,6 +210,11 @@ class BattleAnalyzerApp {
                         this.updateProgress(current, total, status);
                     }
                 );
+            }
+
+            // Update usage display
+            if (analysis._usage) {
+                this.updateUsageDisplay(analysis._usage);
             }
 
             this.currentAnalysis = analysis;
@@ -290,62 +269,59 @@ class BattleAnalyzerApp {
     }
 
     renderOverview(analysis) {
-        const isVictory = analysis.outcome?.toLowerCase() === 'victory';
         const stats = this.analyzer.calculateStats(analysis);
         const grade = this.analyzer.getPerformanceGrade(stats);
 
+        // Use neutral labels - don't assume which side is the uploader
+        const sideA = analysis.player || {};
+        const sideB = analysis.opponent || {};
+
         this.overviewContent.innerHTML = `
-            <div class="stat-card ${isVictory ? 'win' : 'loss'}">
-                <div class="icon">${isVictory ? 'W' : 'L'}</div>
-                <div class="value">${analysis.outcome || 'Unknown'}</div>
-                <div class="label">Battle Result</div>
+            <!-- Performance Grade - Make it prominent -->
+            <div class="stat-card highlight" style="grid-column: 1 / -1;">
+                <div class="grade-badge large" style="border-color: ${grade.color}; color: ${grade.color};">${grade.grade}</div>
+                <div class="value" style="font-size: 1.2rem;">${grade.label} Performance</div>
+                <div class="label">Based on damage efficiency and casualty ratios</div>
             </div>
+
+            <!-- Side A Stats -->
             <div class="stat-card">
-                <div class="grade-badge" style="border-color: ${grade.color}; color: ${grade.color};">${grade.grade}</div>
-                <div class="value" style="font-size: 1rem;">${grade.label}</div>
-                <div class="label">Performance</div>
-            </div>
-            <div class="stat-card">
-                <div class="icon">PVP</div>
-                <div class="value">${analysis.battleType || 'PVP'}</div>
-                <div class="label">Battle Type</div>
-            </div>
-            <div class="stat-card">
-                <div class="icon">VS</div>
-                <div class="value">${analysis.opponent?.name || 'Unknown'}</div>
-                <div class="label">Opponent</div>
+                <div class="icon">A</div>
+                <div class="value">${sideA.name || 'Side A'}</div>
+                <div class="label">Combatant</div>
             </div>
             <div class="stat-card">
                 <div class="icon">PWR</div>
-                <div class="value">${this.formatNumber(analysis.opponent?.power)}</div>
-                <div class="label">Enemy Power</div>
+                <div class="value">${this.formatNumber(sideA.power)}</div>
+                <div class="label">Side A Power</div>
             </div>
             <div class="stat-card">
                 <div class="icon">DMG</div>
                 <div class="value">${this.formatNumber(analysis.damage?.dealt?.total)}</div>
-                <div class="label">Damage Dealt</div>
+                <div class="label">Side A Damage</div>
+            </div>
+
+            <!-- Side B Stats -->
+            <div class="stat-card">
+                <div class="icon">B</div>
+                <div class="value">${sideB.name || 'Side B'}</div>
+                <div class="label">Combatant</div>
             </div>
             <div class="stat-card">
-                <div class="icon">DEF</div>
+                <div class="icon">PWR</div>
+                <div class="value">${this.formatNumber(sideB.power)}</div>
+                <div class="label">Side B Power</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">DMG</div>
                 <div class="value">${this.formatNumber(analysis.damage?.received?.total)}</div>
-                <div class="label">Damage Received</div>
+                <div class="label">Side B Damage</div>
             </div>
-            <div class="stat-card">
-                <div class="icon">K/D</div>
-                <div class="value">${stats.killRatio}:1</div>
-                <div class="label">Kill Ratio</div>
-            </div>
-            ${analysis.screenshotsAnalyzed > 1 ? `
-                <div class="stat-card">
-                    <div class="icon">IMG</div>
-                    <div class="value">${analysis.screenshotsAnalyzed}</div>
-                    <div class="label">Screenshots Combined</div>
-                </div>
-            ` : ''}
+
             ${analysis.notes ? `
-                <div class="stat-card" style="grid-column: 1 / -1;">
-                    <div class="icon">Notes</div>
-                    <div class="label" style="text-align: left; white-space: pre-wrap;">${analysis.notes}</div>
+                <div class="stat-card analysis-notes" style="grid-column: 1 / -1;">
+                    <div class="icon">Analysis</div>
+                    <div class="label" style="text-align: left; white-space: pre-wrap; font-size: 0.95rem; line-height: 1.5;">${analysis.notes}</div>
                 </div>
             ` : ''}
             <button class="toggle-raw" onclick="app.toggleRawData()">Show Raw Data</button>
@@ -367,14 +343,16 @@ class BattleAnalyzerApp {
 
     renderTroops(analysis) {
         const troops = analysis.troops || {};
+        const sideAName = analysis.player?.name || 'Side A';
+        const sideBName = analysis.opponent?.name || 'Side B';
 
         this.troopsContent.innerHTML = `
             <div class="troops-column">
-                <h4>Your Troops</h4>
+                <h4>${sideAName} Troops</h4>
                 ${this.renderTroopList(troops.player)}
             </div>
             <div class="troops-column">
-                <h4>Enemy Troops</h4>
+                <h4>${sideBName} Troops</h4>
                 ${this.renderTroopList(troops.opponent)}
             </div>
         `;
@@ -417,12 +395,14 @@ class BattleAnalyzerApp {
         const dealt = damage.dealt || {};
         const received = damage.received || {};
         const casualties = analysis.casualties || {};
+        const sideAName = analysis.player?.name || 'Side A';
+        const sideBName = analysis.opponent?.name || 'Side B';
 
         const maxDamage = Math.max(dealt.total || 1, received.total || 1);
 
         this.damageContent.innerHTML = `
             <div class="damage-card">
-                <h4>Damage Dealt</h4>
+                <h4>${sideAName} Damage</h4>
                 <div class="damage-bar">
                     <div class="fill" style="width: ${((dealt.total || 0) / maxDamage) * 100}%"></div>
                 </div>
@@ -433,7 +413,7 @@ class BattleAnalyzerApp {
                 ${this.renderDamageBreakdown(dealt)}
             </div>
             <div class="damage-card">
-                <h4>Damage Received</h4>
+                <h4>${sideBName} Damage</h4>
                 <div class="damage-bar">
                     <div class="fill" style="width: ${((received.total || 0) / maxDamage) * 100}%; background: linear-gradient(90deg, #ef4444, #f87171);"></div>
                 </div>
@@ -444,7 +424,7 @@ class BattleAnalyzerApp {
                 ${this.renderDamageBreakdown(received)}
             </div>
             <div class="damage-card">
-                <h4>Your Casualties</h4>
+                <h4>${sideAName} Casualties</h4>
                 <div class="damage-value">
                     <span>Killed</span>
                     <span>${this.formatNumber(casualties.player?.killed)}</span>
@@ -455,7 +435,7 @@ class BattleAnalyzerApp {
                 </div>
             </div>
             <div class="damage-card">
-                <h4>Enemy Casualties</h4>
+                <h4>${sideBName} Casualties</h4>
                 <div class="damage-value">
                     <span>Killed</span>
                     <span>${this.formatNumber(casualties.opponent?.killed)}</span>
@@ -515,6 +495,12 @@ class BattleAnalyzerApp {
 
         try {
             const insights = await this.analyzer.generateSmartInsights(this.battleHistory);
+
+            // Update usage display
+            if (insights._usage) {
+                this.updateUsageDisplay(insights._usage);
+            }
+
             this.currentInsights = insights;
             this.renderInsights(insights);
             this.switchTab('insights');
@@ -696,9 +682,8 @@ class BattleAnalyzerApp {
 
         this.historyList.innerHTML = this.battleHistory.slice(0, 20).map(entry => `
             <div class="history-item" data-id="${entry.id}">
-                <div class="date">${new Date(entry.date).toLocaleDateString()} ${new Date(entry.date).toLocaleTimeString()}${entry.screenshotCount > 1 ? ` (${entry.screenshotCount} imgs)` : ''}</div>
-                <div class="result ${entry.outcome?.toLowerCase() === 'victory' ? 'win' : 'loss'}">${entry.outcome}</div>
-                <div class="opponent">vs ${entry.opponent}</div>
+                <div class="date">${new Date(entry.date).toLocaleDateString()} ${new Date(entry.date).toLocaleTimeString()}</div>
+                <div class="opponent">${entry.analysis?.player?.name || 'Side A'} vs ${entry.opponent || 'Side B'}</div>
             </div>
         `).join('');
 

@@ -12,20 +12,12 @@
         <header class="header">
             <h1>Last War Battle Analyzer</h1>
             <p class="subtitle">Upload your PVP battle screenshots for AI-powered analysis</p>
-        </header>
-
-        <!-- API Key Section -->
-        <section class="api-section">
-            <div class="api-input-group">
-                <label for="apiKey">Claude API Key:</label>
-                <div class="api-input-wrapper">
-                    <input type="password" id="apiKey" placeholder="Enter your Anthropic API key">
-                    <button id="toggleApiKey" class="btn-icon" title="Show/Hide">Show</button>
-                    <button id="saveApiKey" class="btn-primary">Save</button>
-                </div>
-                <span class="api-status" id="apiStatus"></span>
+            <!-- Usage Info Banner -->
+            <div class="usage-banner" id="usageBanner">
+                <span class="usage-text">Daily usage: <span id="usageCount">-</span> / <span id="usageLimit">50</span></span>
+                <span class="usage-remaining" id="usageRemaining"></span>
             </div>
-        </section>
+        </header>
 
         <!-- Main Content -->
         <main class="main-content">
@@ -44,7 +36,7 @@
                     <h3>Screenshots for This Battle (<span id="fileCount">0</span>)</h3>
                     <div class="preview-grid" id="previewGrid"></div>
                     <div class="action-buttons">
-                        <button id="analyzeBtn" class="btn-analyze" disabled>
+                        <button id="analyzeBtn" class="btn-analyze">
                             Analyze Battle
                         </button>
                         <button id="clearBtn" class="btn-secondary">Clear All</button>
