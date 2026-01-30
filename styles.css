@@ -1593,6 +1593,324 @@ body {
     border: 1px solid var(--border-color);
 }
 
+/* Hero Type and Role Badges */
+.hero-type-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.hero-type-badge.tank {
+    background: rgba(96, 165, 250, 0.2);
+    color: #60a5fa;
+}
+
+.hero-type-badge.aircraft {
+    background: rgba(139, 92, 246, 0.2);
+    color: #a78bfa;
+}
+
+.hero-type-badge.missile {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+}
+
+.hero-role-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.hero-role-badge.attacker {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+}
+
+.hero-role-badge.tank-role {
+    background: rgba(96, 165, 250, 0.2);
+    color: #60a5fa;
+}
+
+.hero-role-badge.support {
+    background: rgba(74, 222, 128, 0.2);
+    color: #4ade80;
+}
+
+.hero-role-badge.control {
+    background: rgba(247, 197, 72, 0.2);
+    color: #f7c548;
+}
+
+/* Hero Performance Stats */
+.hero-performance {
+    margin-top: 12px;
+    padding: 10px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+}
+
+.hero-performance-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 0.85rem;
+}
+
+.hero-performance-row .perf-label {
+    color: var(--text-muted);
+}
+
+.hero-performance-row .perf-value {
+    font-weight: 600;
+}
+
+.hero-performance-row .perf-value.damage-dealt {
+    color: var(--accent-success);
+}
+
+.hero-performance-row .perf-value.damage-taken {
+    color: var(--accent-danger);
+}
+
+.survival-badge {
+    display: inline-flex;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.survival-badge.survived {
+    background: rgba(74, 222, 128, 0.2);
+    color: #4ade80;
+}
+
+.survival-badge.eliminated {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.hero-targeting {
+    margin-top: 8px;
+    padding: 8px;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    border-left: 2px solid var(--accent-info);
+}
+
+/* Strategic Analysis Section */
+.strategic-analysis {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+}
+
+.strategic-analysis h4 {
+    color: var(--accent-info);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.type-advantage-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.advantage-card {
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-tertiary);
+}
+
+.advantage-card.player-adv {
+    border-left: 3px solid var(--accent-success);
+}
+
+.advantage-card.opponent-adv {
+    border-left: 3px solid var(--accent-danger);
+}
+
+.advantage-card h5 {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.advantage-card p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.overall-edge {
+    text-align: center;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.overall-edge.player {
+    background: rgba(74, 222, 128, 0.15);
+    color: var(--accent-success);
+}
+
+.overall-edge.opponent {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--accent-danger);
+}
+
+.overall-edge.neutral {
+    background: rgba(247, 197, 72, 0.15);
+    color: var(--accent-secondary);
+}
+
+/* Positioning Issues */
+.positioning-issues {
+    margin-bottom: 20px;
+}
+
+.positioning-issues h5 {
+    color: var(--accent-secondary);
+    margin-bottom: 10px;
+}
+
+.positioning-issue-item {
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+    border-left: 3px solid var(--accent-danger);
+}
+
+.positioning-issue-item .issue-hero {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.positioning-issue-item .issue-problem {
+    color: var(--accent-danger);
+    font-size: 0.9rem;
+    margin: 5px 0;
+}
+
+.positioning-issue-item .issue-fix {
+    color: var(--accent-success);
+    font-size: 0.85rem;
+}
+
+/* Hero Performance Notes */
+.hero-perf-notes {
+    margin-bottom: 20px;
+}
+
+.hero-perf-notes h5 {
+    color: var(--accent-secondary);
+    margin-bottom: 10px;
+}
+
+.perf-note-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+}
+
+.perf-note-item .note-hero {
+    font-weight: 600;
+    min-width: 100px;
+}
+
+.perf-note-item .note-observation {
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.perf-note-item .note-observation.glass-cannon {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+}
+
+.perf-note-item .note-observation.effective-tank {
+    background: rgba(96, 165, 250, 0.2);
+    color: #60a5fa;
+}
+
+.perf-note-item .note-observation.underperforming {
+    background: rgba(247, 197, 72, 0.2);
+    color: #f7c548;
+}
+
+.perf-note-item .note-detail {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    flex: 1;
+}
+
+/* Skill Efficacy */
+.skill-efficacy {
+    margin-bottom: 10px;
+}
+
+.skill-efficacy h5 {
+    color: var(--accent-secondary);
+    margin-bottom: 10px;
+}
+
+.skill-efficacy-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+}
+
+.skill-efficacy-item .skill-name {
+    font-weight: 600;
+    color: var(--accent-info);
+    min-width: 120px;
+}
+
+.skill-efficacy-item .skill-hero {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    min-width: 80px;
+}
+
+.skill-efficacy-item .skill-impact {
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.skill-efficacy-item .skill-desc {
+    flex: 1;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
 /* Responsive for Army Grid */
 @media (max-width: 768px) {
     .army-comparison {
@@ -1600,6 +1918,10 @@ body {
     }
 
     .drone-attributes {
+        grid-template-columns: 1fr;
+    }
+
+    .type-advantage-section {
         grid-template-columns: 1fr;
     }
 }

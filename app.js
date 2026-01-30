@@ -355,6 +355,8 @@ class BattleAnalyzerApp {
 
             ${battleAnalysisHtml}
 
+            ${this.renderStrategicAnalysis(analysis)}
+
             ${analysis.notes ? `
                 <div class="stat-card analysis-notes" style="grid-column: 1 / -1;">
                     <div class="icon">Notes</div>
@@ -363,6 +365,94 @@ class BattleAnalyzerApp {
             ` : ''}
             <button class="toggle-raw" onclick="app.toggleRawData()">Show Raw Data</button>
             <div class="raw-data" id="rawData" style="display: none;">${JSON.stringify(analysis, null, 2)}</div>
+        `;
+    }
+
+    renderStrategicAnalysis(analysis) {
+        const strat = analysis.strategicAnalysis;
+        if (!strat) return '';
+
+        // Type advantage section
+        const typeAdv = strat.typeAdvantage;
+        const typeAdvHtml = typeAdv ? `
+            <div class="type-advantage-section">
+                <div class="advantage-card player-adv">
+                    <h5>Side A Advantages</h5>
+                    <p>${typeAdv.playerAdvantage || 'None identified'}</p>
+                </div>
+                <div class="advantage-card opponent-adv">
+                    <h5>Side B Advantages</h5>
+                    <p>${typeAdv.opponentAdvantage || 'None identified'}</p>
+                </div>
+            </div>
+            ${typeAdv.overallEdge ? `
+                <div class="overall-edge ${typeAdv.overallEdge.toLowerCase()}">
+                    Type Matchup Edge: ${typeAdv.overallEdge === 'player' ? 'Side A' : typeAdv.overallEdge === 'opponent' ? 'Side B' : 'Neutral'}
+                </div>
+            ` : ''}
+        ` : '';
+
+        // Positioning issues
+        const posIssues = strat.positioningIssues || [];
+        const posIssuesHtml = posIssues.length > 0 ? `
+            <div class="positioning-issues">
+                <h5>Positioning Issues</h5>
+                ${posIssues.map(issue => `
+                    <div class="positioning-issue-item">
+                        <div class="issue-hero">${issue.hero}</div>
+                        <div class="issue-problem">${issue.issue}</div>
+                        <div class="issue-fix">Recommendation: ${issue.recommendation}</div>
+                    </div>
+                `).join('')}
+            </div>
+        ` : '';
+
+        // Hero performance notes
+        const perfNotes = strat.heroPerformanceNotes || [];
+        const perfNotesHtml = perfNotes.length > 0 ? `
+            <div class="hero-perf-notes">
+                <h5>Hero Performance Notes</h5>
+                ${perfNotes.map(note => {
+                    const obsClass = (note.observation || '').toLowerCase().replace(/\s+/g, '-');
+                    return `
+                        <div class="perf-note-item">
+                            <span class="note-hero">${note.hero}</span>
+                            <span class="note-observation ${obsClass}">${note.observation}</span>
+                            <span class="note-detail">${note.detail}</span>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        ` : '';
+
+        // Skill efficacy
+        const skillEff = strat.skillEfficacy || [];
+        const skillEffHtml = skillEff.length > 0 ? `
+            <div class="skill-efficacy">
+                <h5>Skill Impact Analysis</h5>
+                ${skillEff.map(skill => `
+                    <div class="skill-efficacy-item">
+                        <span class="skill-name">${skill.skill}</span>
+                        <span class="skill-hero">(${skill.hero})</span>
+                        <span class="skill-impact ${(skill.impact || 'medium').toLowerCase()}">${skill.impact}</span>
+                        <span class="skill-desc">${skill.description}</span>
+                    </div>
+                `).join('')}
+            </div>
+        ` : '';
+
+        if (!typeAdvHtml && !posIssuesHtml && !perfNotesHtml && !skillEffHtml) {
+            return '';
+        }
+
+        return `
+            <div class="strategic-analysis" style="grid-column: 1 / -1;">
+                <h4>Strategic Analysis</h4>
+                ${typeAdvHtml}
+                ${posIssuesHtml}
+                ${perfNotesHtml}
+                ${skillEffHtml}
+            </div>
         `;
     }
 
@@ -526,6 +616,48 @@ class BattleAnalyzerApp {
                 <div class="hero-power">Power: ${this.formatNumber(hero.power)}</div>
             ` : '';
 
+            // Hero type badge
+            const heroType = hero.heroType;
+            const heroTypeBadge = heroType ? `
+                <span class="hero-type-badge ${heroType.toLowerCase()}">${heroType}</span>
+            ` : '';
+
+            // Hero role badge
+            const heroRole = hero.role;
+            const heroRoleBadge = heroRole ? `
+                <span class="hero-role-badge ${heroRole.toLowerCase().replace(' ', '-')}-role">${heroRole}</span>
+            ` : '';
+
+            // Performance metrics
+            const perf = hero.performance;
+            const performanceHtml = perf ? `
+                <div class="hero-performance">
+                    <div class="hero-performance-row">
+                        <span class="perf-label">Damage Dealt</span>
+                        <span class="perf-value damage-dealt">${this.formatNumber(perf.damageDealt)}</span>
+                    </div>
+                    <div class="hero-performance-row">
+                        <span class="perf-label">Damage Taken</span>
+                        <span class="perf-value damage-taken">${this.formatNumber(perf.damageTaken)}</span>
+                    </div>
+                    <div class="hero-performance-row">
+                        <span class="perf-label">Status</span>
+                        <span class="survival-badge ${(perf.survivalStatus || 'unknown').toLowerCase()}">${perf.survivalStatus || 'Unknown'}</span>
+                    </div>
+                    ${perf.skillsActivated && perf.skillsActivated.length > 0 ? `
+                        <div class="hero-performance-row">
+                            <span class="perf-label">Skills Used</span>
+                            <span class="perf-value">${perf.skillsActivated.join(', ')}</span>
+                        </div>
+                    ` : ''}
+                    ${perf.targetingBehavior ? `
+                        <div class="hero-targeting">
+                            <strong>Targeting:</strong> ${perf.targetingBehavior}
+                        </div>
+                    ` : ''}
+                </div>
+            ` : '';
+
             return `
                 <div class="hero-card">
                     <div class="hero-header">
@@ -537,12 +669,15 @@ class BattleAnalyzerApp {
                         </div>
                     </div>
                     <div class="hero-stats-row">
+                        ${heroTypeBadge}
+                        ${heroRoleBadge}
                         ${weaponHtml}
                         ${redGearHtml}
                     </div>
                     <div class="hero-skills">
                         ${(hero.skills || []).map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
                     </div>
+                    ${performanceHtml}
                 </div>
             `;
         }).join('');

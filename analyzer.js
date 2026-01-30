@@ -120,6 +120,8 @@ Please provide a detailed analysis in the following JSON format:
             "level": 0,
             "stars": 0,
             "power": 0,
+            "heroType": "Tank/Aircraft/Missile",
+            "role": "Attacker/Tank/Support/Control",
             "exclusiveWeapon": {
                 "name": "weapon name or null if not visible",
                 "level": 0,
@@ -127,10 +129,33 @@ Please provide a detailed analysis in the following JSON format:
             },
             "redGearCount": 0,
             "skills": ["skill1", "skill2"],
-            "side": "player/opponent"
+            "side": "player/opponent",
+            "performance": {
+                "damageDealt": 0,
+                "damageTaken": 0,
+                "survivalStatus": "Survived/Eliminated/Unknown",
+                "skillsActivated": ["skill names that triggered"],
+                "targetingBehavior": "description of who they attacked"
+            }
         }
     ],
     "squadType": "Tank/Aircraft/Missile/Mixed",
+    "strategicAnalysis": {
+        "typeAdvantage": {
+            "playerAdvantage": "description of type matchups favoring player",
+            "opponentAdvantage": "description of type matchups favoring opponent",
+            "overallEdge": "player/opponent/neutral"
+        },
+        "positioningIssues": [
+            { "hero": "hero name", "issue": "description of positioning problem", "recommendation": "suggested fix" }
+        ],
+        "heroPerformanceNotes": [
+            { "hero": "hero name", "observation": "glass cannon/effective tank/underperforming/etc", "detail": "explanation" }
+        ],
+        "skillEfficacy": [
+            { "skill": "skill name", "hero": "hero name", "impact": "High/Medium/Low", "description": "how the skill affected the battle" }
+        ]
+    },
     "armyDetails": {
         "player": {
             "drone": {
@@ -185,6 +210,17 @@ Important instructions:
 7. Determine squadType based on hero composition: Tank (tank-focused), Aircraft (aircraft-focused), Missile (missile-focused), or Mixed
 8. Extract Army tab data if visible: Drone details, Tech power, Decoration power, Units power, Wall of Honor, Overlord level/power, Tactics Cards, Cosmetics
 9. Provide battle analysis explaining key factors that determined the outcome
+
+HERO PERFORMANCE ANALYSIS:
+10. For each hero, determine their role: Attacker (high damage dealers like D.Va), Tank (frontline like Murphy, Williams), Support (buffers/healers like Lucius), Control (CC specialists like Stetman)
+11. Analyze damage dealt vs damage taken to identify "glass cannons" (high damage, low survival) vs "effective tanks" (absorbed damage, survived)
+12. Note which heroes were eliminated early vs survived the battle
+13. Identify skill activations that significantly impacted the battle (shields from Lucius/Williams, control effects, etc.)
+
+STRATEGIC ANALYSIS:
+14. Evaluate type counter advantages: Tanks > Aircraft > Missiles > Tanks. Note which side had favorable matchups
+15. Identify positioning issues: support/defense heroes in wrong rows, attackers on frontline taking too much damage
+16. Known hero matchups: Stetman excels vs tank-heavy, Mason excels vs aircraft, etc.
 
 Respond ONLY with the JSON object, no additional text.`;
 
@@ -307,6 +343,8 @@ Please provide a detailed analysis in the following JSON format:
             "level": 0,
             "stars": 0,
             "power": 0,
+            "heroType": "Tank/Aircraft/Missile",
+            "role": "Attacker/Tank/Support/Control",
             "exclusiveWeapon": {
                 "name": "weapon name or null if not visible",
                 "level": 0,
@@ -314,10 +352,33 @@ Please provide a detailed analysis in the following JSON format:
             },
             "redGearCount": 0,
             "skills": ["skill1", "skill2"],
-            "side": "player/opponent"
+            "side": "player/opponent",
+            "performance": {
+                "damageDealt": 0,
+                "damageTaken": 0,
+                "survivalStatus": "Survived/Eliminated/Unknown",
+                "skillsActivated": ["skill names that triggered"],
+                "targetingBehavior": "description of who they attacked"
+            }
         }
     ],
     "squadType": "Tank/Aircraft/Missile/Mixed",
+    "strategicAnalysis": {
+        "typeAdvantage": {
+            "playerAdvantage": "description of type matchups favoring player",
+            "opponentAdvantage": "description of type matchups favoring opponent",
+            "overallEdge": "player/opponent/neutral"
+        },
+        "positioningIssues": [
+            { "hero": "hero name", "issue": "description of positioning problem", "recommendation": "suggested fix" }
+        ],
+        "heroPerformanceNotes": [
+            { "hero": "hero name", "observation": "glass cannon/effective tank/underperforming/etc", "detail": "explanation" }
+        ],
+        "skillEfficacy": [
+            { "skill": "skill name", "hero": "hero name", "impact": "High/Medium/Low", "description": "how the skill affected the battle" }
+        ]
+    },
     "armyDetails": {
         "player": {
             "drone": {
@@ -375,6 +436,17 @@ Important instructions:
 9. Determine squadType based on hero composition: Tank (tank-focused), Aircraft (aircraft-focused), Missile (missile-focused), or Mixed
 10. Extract Army tab data if visible: Drone details, Tech power, Decoration power, Units power, Wall of Honor, Overlord level/power, Tactics Cards, Cosmetics
 11. Provide battle analysis explaining key factors that determined the outcome
+
+HERO PERFORMANCE ANALYSIS:
+12. For each hero, determine their role: Attacker (high damage dealers like D.Va), Tank (frontline like Murphy, Williams), Support (buffers/healers like Lucius), Control (CC specialists like Stetman)
+13. Analyze damage dealt vs damage taken to identify "glass cannons" (high damage, low survival) vs "effective tanks" (absorbed damage, survived)
+14. Note which heroes were eliminated early vs survived the battle
+15. Identify skill activations that significantly impacted the battle (shields from Lucius/Williams, control effects, etc.)
+
+STRATEGIC ANALYSIS:
+16. Evaluate type counter advantages: Tanks > Aircraft > Missiles > Tanks. Note which side had favorable matchups
+17. Identify positioning issues: support/defense heroes in wrong rows, attackers on frontline taking too much damage
+18. Known hero matchups: Stetman excels vs tank-heavy, Mason excels vs aircraft, etc.
 
 Respond ONLY with the JSON object, no additional text.`;
 
