@@ -436,6 +436,73 @@ class BattleAnalyzerApp {
             </div>
         ` : '';
 
+        // Type counter analysis
+        const typeCounter = hierarchy.typeCounterAnalysis;
+        const typeCounterHtml = typeCounter ? `
+            <div class="type-counter-section ${typeCounter.counterStatus === 'player counters opponent' ? 'advantage' : typeCounter.counterStatus === 'opponent counters player' ? 'disadvantage' : 'neutral'}">
+                <h6 style="margin-bottom: 10px; color: var(--accent-secondary);">Type Counter Matchup</h6>
+                <div class="counter-matchup">
+                    <div class="counter-squad">
+                        <span class="squad-label">Side A</span>
+                        <span class="squad-type ${(typeCounter.playerSquadType || '').toLowerCase()}">${typeCounter.playerSquadType || 'Unknown'}</span>
+                    </div>
+                    <span class="counter-arrow ${typeCounter.counterStatus === 'player counters opponent' ? 'beats' : typeCounter.counterStatus === 'opponent counters player' ? 'loses' : 'neutral'}">
+                        ${typeCounter.counterStatus === 'player counters opponent' ? '>' : typeCounter.counterStatus === 'opponent counters player' ? '<' : '='}
+                    </span>
+                    <div class="counter-squad">
+                        <span class="squad-label">Side B</span>
+                        <span class="squad-type ${(typeCounter.opponentSquadType || '').toLowerCase()}">${typeCounter.opponentSquadType || 'Unknown'}</span>
+                    </div>
+                </div>
+                ${typeCounter.effectiveSwing ? `
+                    <div class="counter-effect ${typeCounter.wasDecisive ? 'decisive' : ''}">
+                        ${typeCounter.counterStatus !== 'neutral' ? `Type counter provides ~${typeCounter.effectiveSwing} effective combat swing` : 'No type advantage - neutral matchup'}
+                        ${typeCounter.wasDecisive ? ' - THIS WAS DECISIVE!' : ''}
+                    </div>
+                ` : ''}
+            </div>
+        ` : '';
+
+        // Mastery analysis
+        const mastery = hierarchy.masteryAnalysis;
+        const masteryHtml = mastery ? `
+            <div class="mastery-section">
+                <h6 style="margin-bottom: 10px; color: var(--accent-secondary);">Mastery Levels (Hidden Power)</h6>
+                <div class="mastery-comparison">
+                    ${this.renderMasterySide(mastery.playerMasteryLevels, 'Side A')}
+                    ${this.renderMasterySide(mastery.opponentMasteryLevels, 'Side B')}
+                </div>
+                ${mastery.relevantMasteryGap ? `
+                    <div class="mastery-gap-info">
+                        <strong>Gap:</strong> ${mastery.relevantMasteryGap}
+                        ${mastery.hiddenPowerEstimate ? `<br><strong>Hidden Power:</strong> ${mastery.hiddenPowerEstimate}` : ''}
+                    </div>
+                ` : ''}
+            </div>
+        ` : '';
+
+        // Effective combat power
+        const ecp = hierarchy.effectiveCombatPower;
+        const ecpHtml = ecp && ecp.ratio ? `
+            <div class="effective-power-section">
+                <h6>Effective Combat Power</h6>
+                <div class="power-multipliers">
+                    <div class="power-mult-card">
+                        <div class="mult-label">Side A</div>
+                        <div class="mult-value">${ecp.playerMultiplier || '?'}x</div>
+                    </div>
+                    <div class="power-ratio">
+                        <span class="ratio-label">Ratio</span>
+                        ${ecp.ratio}
+                    </div>
+                    <div class="power-mult-card">
+                        <div class="mult-label">Side B</div>
+                        <div class="mult-value">${ecp.opponentMultiplier || '?'}x</div>
+                    </div>
+                </div>
+            </div>
+        ` : '';
+
         // Key lesson
         const lessonHtml = hierarchy.keyLesson ? `
             <div class="key-lesson">
@@ -443,15 +510,49 @@ class BattleAnalyzerApp {
             </div>
         ` : '';
 
-        if (!starHtml && !luciusHtml && !tvsHtml && !lessonHtml) return '';
+        if (!starHtml && !luciusHtml && !tvsHtml && !typeCounterHtml && !masteryHtml && !ecpHtml && !lessonHtml) return '';
 
         return `
             <div class="power-hierarchy">
                 <h5>Power Hierarchy Analysis</h5>
+                ${typeCounterHtml}
+                ${masteryHtml}
+                ${ecpHtml}
                 ${starHtml}
                 ${luciusHtml}
                 ${tvsHtml}
                 ${lessonHtml}
+            </div>
+        `;
+    }
+
+    renderMasterySide(levels, sideName) {
+        if (!levels) {
+            return `<div class="mastery-side"><h6>${sideName}</h6><p style="color: var(--text-muted); font-size: 0.8rem;">Not visible</p></div>`;
+        }
+
+        const renderBar = (type, value) => {
+            const isMax = value && (value.toLowerCase() === 'max' || value === '100%');
+            const numValue = isMax ? 100 : parseInt(value) || 0;
+            return `
+                <div class="mastery-bar">
+                    <span class="bar-label">${type}</span>
+                    <div class="bar-track">
+                        <div class="bar-fill ${type.toLowerCase()} ${isMax ? 'max' : ''}" style="width: ${numValue}%"></div>
+                    </div>
+                    <span class="bar-value ${isMax ? 'max' : ''}">${value || '0%'}</span>
+                </div>
+            `;
+        };
+
+        return `
+            <div class="mastery-side">
+                <h6>${sideName}</h6>
+                <div class="mastery-bars">
+                    ${renderBar('Tank', levels.tank)}
+                    ${renderBar('Aircraft', levels.aircraft)}
+                    ${renderBar('Missile', levels.missile)}
+                </div>
             </div>
         `;
     }

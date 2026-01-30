@@ -232,6 +232,24 @@ Please provide a detailed analysis in the following JSON format:
                 "betterStarsSide": "player/opponent/equal",
                 "outcome": "explanation of whether tech advantage was negated by star disadvantage"
             },
+            "typeCounterAnalysis": {
+                "playerSquadType": "Tank/Aircraft/Missile/Mixed",
+                "opponentSquadType": "Tank/Aircraft/Missile/Mixed",
+                "counterStatus": "player counters opponent/opponent counters player/neutral",
+                "effectiveSwing": "estimated % advantage from counter (typically 40%)",
+                "wasDecisive": true
+            },
+            "masteryAnalysis": {
+                "playerMasteryLevels": { "tank": "0-100% or MAX", "aircraft": "0-100% or MAX", "missile": "0-100% or MAX" },
+                "opponentMasteryLevels": { "tank": "0-100% or MAX", "aircraft": "0-100% or MAX", "missile": "0-100% or MAX" },
+                "relevantMasteryGap": "description of mastery gap in the squad types being used",
+                "hiddenPowerEstimate": "estimated hidden power from mastery difference"
+            },
+            "effectiveCombatPower": {
+                "playerMultiplier": "estimated total multiplier (tech × mastery × counter × synergy)",
+                "opponentMultiplier": "estimated total multiplier",
+                "ratio": "effective power ratio between sides"
+            },
             "keyLesson": "main takeaway for the losing side to improve"
         }
     },
@@ -284,6 +302,25 @@ CRITICAL POWER HIERARCHY (in order of importance):
 29. MORALE ADVANTAGE (e.g., 1.04x = 4% more damage) is the LEAST impactful - it cannot overcome hero quality differences
 
 KEY INSIGHT: You cannot out-research a player with higher star heroes. Invest in hero stars before pushing tech research. When analyzing why someone lost despite having better tech/morale, check their hero star levels first.
+
+TYPE COUNTER MECHANICS (CRITICAL):
+- TYPE COUNTER CYCLE: Missiles > Aircraft > Tanks > Missiles. The countering type deals +20% damage AND takes -20% damage = 40% effective combat swing!
+- SPECIALIZED RESEARCH COMPOUNDS: If a Missile player has 87% Missile tech vs opponent's 41% = +46% stat advantage. Combined with type counter (+40%) = devastating.
+- The game shows "Your lineup is severely countered by the enemy lineup" warning - this means ~40% disadvantage before other factors!
+- EFFECTIVE COMBAT POWER FORMULA: Base stats × (1 + Tech Boost) × (1 + Mastery Bonus) × Type Counter × Type Synergy
+  Example: 1.0 × 1.87 (87% tech) × 1.30 (MAX mastery) × 1.20 (counter) × 1.20 (4-hero synergy) = 3.5x effective power!
+
+MASTERY SYSTEM (HIDDEN POWER):
+- Mastery levels (0% to MAX) provide MASSIVE hidden bonuses NOT shown in squad power:
+  - MAX Mastery: +30% core stats (ATK/DEF/HP), +20% damage dealt, +10% damage reduction
+- A player with MAX mastery vs 0% mastery opponent has ~50% hidden stat advantage
+- Check mastery icons in battle report to identify this hidden factor
+
+BATTLE PREDICTION RULES:
+- Never attack into type counter with lower power - almost always loses
+- Type counter + specialized research + max mastery = 2-3x effective combat power difference
+- Countered side typically deals 40-60% less damage than expected
+- If damage ratio is 2.5:1 or worse, type counter + mastery gap is likely the cause
 
 Respond ONLY with the JSON object, no additional text.`;
 
@@ -518,6 +555,24 @@ Please provide a detailed analysis in the following JSON format:
                 "betterStarsSide": "player/opponent/equal",
                 "outcome": "explanation of whether tech advantage was negated by star disadvantage"
             },
+            "typeCounterAnalysis": {
+                "playerSquadType": "Tank/Aircraft/Missile/Mixed",
+                "opponentSquadType": "Tank/Aircraft/Missile/Mixed",
+                "counterStatus": "player counters opponent/opponent counters player/neutral",
+                "effectiveSwing": "estimated % advantage from counter (typically 40%)",
+                "wasDecisive": true
+            },
+            "masteryAnalysis": {
+                "playerMasteryLevels": { "tank": "0-100% or MAX", "aircraft": "0-100% or MAX", "missile": "0-100% or MAX" },
+                "opponentMasteryLevels": { "tank": "0-100% or MAX", "aircraft": "0-100% or MAX", "missile": "0-100% or MAX" },
+                "relevantMasteryGap": "description of mastery gap in the squad types being used",
+                "hiddenPowerEstimate": "estimated hidden power from mastery difference"
+            },
+            "effectiveCombatPower": {
+                "playerMultiplier": "estimated total multiplier (tech × mastery × counter × synergy)",
+                "opponentMultiplier": "estimated total multiplier",
+                "ratio": "effective power ratio between sides"
+            },
             "keyLesson": "main takeaway for the losing side to improve"
         }
     },
@@ -573,6 +628,25 @@ CRITICAL POWER HIERARCHY (in order of importance):
 31. MORALE ADVANTAGE (e.g., 1.04x = 4% more damage) is the LEAST impactful - it cannot overcome hero quality differences
 
 KEY INSIGHT: You cannot out-research a player with higher star heroes. Invest in hero stars before pushing tech research. When analyzing why someone lost despite having better tech/morale, check their hero star levels first.
+
+TYPE COUNTER MECHANICS (CRITICAL):
+- TYPE COUNTER CYCLE: Missiles > Aircraft > Tanks > Missiles. The countering type deals +20% damage AND takes -20% damage = 40% effective combat swing!
+- SPECIALIZED RESEARCH COMPOUNDS: If a Missile player has 87% Missile tech vs opponent's 41% = +46% stat advantage. Combined with type counter (+40%) = devastating.
+- The game shows "Your lineup is severely countered by the enemy lineup" warning - this means ~40% disadvantage before other factors!
+- EFFECTIVE COMBAT POWER FORMULA: Base stats × (1 + Tech Boost) × (1 + Mastery Bonus) × Type Counter × Type Synergy
+  Example: 1.0 × 1.87 (87% tech) × 1.30 (MAX mastery) × 1.20 (counter) × 1.20 (4-hero synergy) = 3.5x effective power!
+
+MASTERY SYSTEM (HIDDEN POWER):
+- Mastery levels (0% to MAX) provide MASSIVE hidden bonuses NOT shown in squad power:
+  - MAX Mastery: +30% core stats (ATK/DEF/HP), +20% damage dealt, +10% damage reduction
+- A player with MAX mastery vs 0% mastery opponent has ~50% hidden stat advantage
+- Check mastery icons in battle report to identify this hidden factor
+
+BATTLE PREDICTION RULES:
+- Never attack into type counter with lower power - almost always loses
+- Type counter + specialized research + max mastery = 2-3x effective combat power difference
+- Countered side typically deals 40-60% less damage than expected
+- If damage ratio is 2.5:1 or worse, type counter + mastery gap is likely the cause
 
 Respond ONLY with the JSON object, no additional text.`;
 

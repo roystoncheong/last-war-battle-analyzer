@@ -2242,6 +2242,223 @@ body {
     color: #4ade80;
 }
 
+/* Type Counter Analysis */
+.type-counter-section {
+    padding: 15px;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    margin-bottom: 15px;
+    border: 2px solid var(--accent-danger);
+}
+
+.type-counter-section.neutral {
+    border-color: var(--border-color);
+}
+
+.type-counter-section.advantage {
+    border-color: var(--accent-success);
+    background: rgba(74, 222, 128, 0.05);
+}
+
+.type-counter-section.disadvantage {
+    border-color: var(--accent-danger);
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.counter-matchup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+.counter-squad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 20px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+}
+
+.counter-squad .squad-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.counter-squad .squad-type {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.counter-squad .squad-type.tank { color: #60a5fa; }
+.counter-squad .squad-type.aircraft { color: #a78bfa; }
+.counter-squad .squad-type.missile { color: #f87171; }
+.counter-squad .squad-type.mixed { color: #f7c548; }
+
+.counter-arrow {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.counter-arrow.beats { color: var(--accent-success); }
+.counter-arrow.loses { color: var(--accent-danger); }
+.counter-arrow.neutral { color: var(--text-muted); }
+
+.counter-effect {
+    text-align: center;
+    padding: 10px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+}
+
+.counter-effect.decisive {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid var(--accent-danger);
+    color: var(--accent-danger);
+    font-weight: 600;
+}
+
+/* Mastery Analysis */
+.mastery-section {
+    padding: 15px;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    margin-bottom: 15px;
+}
+
+.mastery-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+.mastery-side {
+    padding: 10px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+}
+
+.mastery-side h6 {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.mastery-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.mastery-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mastery-bar .bar-label {
+    font-size: 0.75rem;
+    width: 50px;
+    color: var(--text-muted);
+}
+
+.mastery-bar .bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-primary);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.mastery-bar .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s;
+}
+
+.mastery-bar .bar-fill.tank { background: #60a5fa; }
+.mastery-bar .bar-fill.aircraft { background: #a78bfa; }
+.mastery-bar .bar-fill.missile { background: #f87171; }
+.mastery-bar .bar-fill.max { background: linear-gradient(90deg, #ffd700, #ff6b35); }
+
+.mastery-bar .bar-value {
+    font-size: 0.75rem;
+    font-weight: 600;
+    min-width: 40px;
+    text-align: right;
+}
+
+.mastery-bar .bar-value.max {
+    color: #ffd700;
+}
+
+.mastery-gap-info {
+    padding: 10px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    border-left: 3px solid var(--accent-secondary);
+}
+
+/* Effective Combat Power */
+.effective-power-section {
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(247, 197, 72, 0.1));
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--accent-primary);
+    margin-bottom: 15px;
+}
+
+.effective-power-section h6 {
+    color: var(--accent-secondary);
+    margin-bottom: 12px;
+}
+
+.power-multipliers {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+}
+
+.power-mult-card {
+    padding: 12px;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+}
+
+.power-mult-card .mult-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.power-mult-card .mult-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-secondary);
+}
+
+.power-ratio {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.power-ratio .ratio-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    display: block;
+}
+
 @media (max-width: 768px) {
     .squad-comp-grid {
         grid-template-columns: 1fr;
