@@ -119,10 +119,55 @@ Please provide a detailed analysis in the following JSON format:
             "name": "hero name",
             "level": 0,
             "stars": 0,
+            "power": 0,
+            "exclusiveWeapon": {
+                "name": "weapon name or null if not visible",
+                "level": 0,
+                "stars": 0
+            },
+            "redGearCount": 0,
             "skills": ["skill1", "skill2"],
             "side": "player/opponent"
         }
     ],
+    "squadType": "Tank/Aircraft/Missile/Mixed",
+    "armyDetails": {
+        "player": {
+            "drone": {
+                "level": 0,
+                "attributeBoosts": { "attack": 0, "defense": 0, "hp": 0 },
+                "skillChip": { "name": "", "stars": 0 }
+            },
+            "tech": { "power": 0 },
+            "decoration": { "power": 0 },
+            "units": { "power": 0 },
+            "wallOfHonor": { "power": 0 },
+            "overlord": { "level": 0, "power": 0 },
+            "tacticsCards": { "power": 0 },
+            "cosmetics": { "power": 0 }
+        },
+        "opponent": {
+            "drone": {
+                "level": 0,
+                "attributeBoosts": { "attack": 0, "defense": 0, "hp": 0 },
+                "skillChip": { "name": "", "stars": 0 }
+            },
+            "tech": { "power": 0 },
+            "decoration": { "power": 0 },
+            "units": { "power": 0 },
+            "wallOfHonor": { "power": 0 },
+            "overlord": { "level": 0, "power": 0 },
+            "tacticsCards": { "power": 0 },
+            "cosmetics": { "power": 0 }
+        }
+    },
+    "battleAnalysis": {
+        "winner": "player/opponent",
+        "keyFactors": [
+            { "factor": "factor name", "impact": "High/Medium/Low", "description": "explanation" }
+        ],
+        "winReason": "summary explanation of why winner won"
+    },
     "resources": {
         "gained": {},
         "lost": {}
@@ -135,8 +180,11 @@ Important instructions:
 2. If a value is not visible or unclear, use null instead of guessing
 3. Pay attention to troop tiers (T1-T10) as they significantly impact battle analysis
 4. Note any special battle conditions or buffs visible
-5. Include hero information if commanders/heroes are shown
+5. Include hero information if commanders/heroes are shown - look for exclusive weapons (golden/special weapons), hero power levels, and red gear count (0-6 pieces of red/legendary equipment)
 6. The game uses terms like "Infantry", "Vehicles/Tanks", "Aircraft/Helicopters"
+7. Determine squadType based on hero composition: Tank (tank-focused), Aircraft (aircraft-focused), Missile (missile-focused), or Mixed
+8. Extract Army tab data if visible: Drone details, Tech power, Decoration power, Units power, Wall of Honor, Overlord level/power, Tactics Cards, Cosmetics
+9. Provide battle analysis explaining key factors that determined the outcome
 
 Respond ONLY with the JSON object, no additional text.`;
 
@@ -196,7 +244,7 @@ Respond ONLY with the JSON object, no additional text.`;
 
         const prompt = `You are an expert analyzer for the mobile game "Last War: Survival".
 
-I am providing you with ${imageFiles.length} screenshot(s) from the SAME battle. These screenshots may show different tabs or views of the same battle report (e.g., overview tab, troop details tab, damage breakdown tab, hero stats tab).
+I am providing you with ${imageFiles.length} screenshot(s) from the SAME battle. These screenshots may show different tabs or views of the same battle report (e.g., overview tab, troop details tab, damage breakdown tab, hero stats tab, Army tab).
 
 Analyze ALL screenshots together and combine the information into a single comprehensive battle analysis. Extract data from whichever screenshot shows it most clearly.
 
@@ -258,10 +306,55 @@ Please provide a detailed analysis in the following JSON format:
             "name": "hero name",
             "level": 0,
             "stars": 0,
+            "power": 0,
+            "exclusiveWeapon": {
+                "name": "weapon name or null if not visible",
+                "level": 0,
+                "stars": 0
+            },
+            "redGearCount": 0,
             "skills": ["skill1", "skill2"],
             "side": "player/opponent"
         }
     ],
+    "squadType": "Tank/Aircraft/Missile/Mixed",
+    "armyDetails": {
+        "player": {
+            "drone": {
+                "level": 0,
+                "attributeBoosts": { "attack": 0, "defense": 0, "hp": 0 },
+                "skillChip": { "name": "", "stars": 0 }
+            },
+            "tech": { "power": 0 },
+            "decoration": { "power": 0 },
+            "units": { "power": 0 },
+            "wallOfHonor": { "power": 0 },
+            "overlord": { "level": 0, "power": 0 },
+            "tacticsCards": { "power": 0 },
+            "cosmetics": { "power": 0 }
+        },
+        "opponent": {
+            "drone": {
+                "level": 0,
+                "attributeBoosts": { "attack": 0, "defense": 0, "hp": 0 },
+                "skillChip": { "name": "", "stars": 0 }
+            },
+            "tech": { "power": 0 },
+            "decoration": { "power": 0 },
+            "units": { "power": 0 },
+            "wallOfHonor": { "power": 0 },
+            "overlord": { "level": 0, "power": 0 },
+            "tacticsCards": { "power": 0 },
+            "cosmetics": { "power": 0 }
+        }
+    },
+    "battleAnalysis": {
+        "winner": "player/opponent",
+        "keyFactors": [
+            { "factor": "factor name", "impact": "High/Medium/Low", "description": "explanation" }
+        ],
+        "winReason": "summary explanation of why winner won"
+    },
     "resources": {
         "gained": {},
         "lost": {}
@@ -277,8 +370,11 @@ Important instructions:
 4. If a value is not visible in ANY screenshot, use null instead of guessing
 5. Pay attention to troop tiers (T1-T10) as they significantly impact battle analysis
 6. Note any special battle conditions or buffs visible
-7. Include hero information if commanders/heroes are shown in any screenshot
+7. Include hero information if commanders/heroes are shown - look for exclusive weapons (golden/special weapons), hero power levels, and red gear count (0-6 pieces of red/legendary equipment)
 8. The game uses terms like "Infantry", "Vehicles/Tanks", "Aircraft/Helicopters"
+9. Determine squadType based on hero composition: Tank (tank-focused), Aircraft (aircraft-focused), Missile (missile-focused), or Mixed
+10. Extract Army tab data if visible: Drone details, Tech power, Decoration power, Units power, Wall of Honor, Overlord level/power, Tactics Cards, Cosmetics
+11. Provide battle analysis explaining key factors that determined the outcome
 
 Respond ONLY with the JSON object, no additional text.`;
 

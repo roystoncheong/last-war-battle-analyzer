@@ -53,6 +53,7 @@ class BattleAnalyzerApp {
         this.troopsContent = document.getElementById('troopsContent');
         this.damageContent = document.getElementById('damageContent');
         this.heroesContent = document.getElementById('heroesContent');
+        this.armyContent = document.getElementById('armyContent');
         this.insightsContent = document.getElementById('insightsContent');
         this.screenshotSources = document.getElementById('screenshotSources');
 
@@ -265,6 +266,7 @@ class BattleAnalyzerApp {
         this.renderTroops(analysis);
         this.renderDamage(analysis);
         this.renderHeroes(analysis);
+        this.renderArmy(analysis);
         this.switchTab('overview');
     }
 
@@ -276,12 +278,45 @@ class BattleAnalyzerApp {
         const sideA = analysis.player || {};
         const sideB = analysis.opponent || {};
 
+        // Squad type badge
+        const squadType = analysis.squadType || null;
+        const squadTypeBadge = squadType ? `
+            <span class="squad-type-badge ${squadType.toLowerCase()}">${squadType}</span>
+        ` : '';
+
+        // Battle analysis section
+        const battleAnalysis = analysis.battleAnalysis;
+        const battleAnalysisHtml = battleAnalysis ? `
+            <div class="battle-analysis" style="grid-column: 1 / -1;">
+                <h4>Battle Analysis ${battleAnalysis.winner ? `<span class="winner-badge ${battleAnalysis.winner}">${battleAnalysis.winner === 'player' ? 'Side A Wins' : 'Side B Wins'}</span>` : ''}</h4>
+                ${battleAnalysis.keyFactors && battleAnalysis.keyFactors.length > 0 ? `
+                    <div class="key-factors">
+                        ${battleAnalysis.keyFactors.map(f => `
+                            <div class="factor-item factor-${(f.impact || 'medium').toLowerCase()}">
+                                <div class="factor-header">
+                                    <span class="factor-name">${f.factor || 'Unknown Factor'}</span>
+                                    <span class="factor-impact ${(f.impact || 'medium').toLowerCase()}">${f.impact || 'Medium'}</span>
+                                </div>
+                                <div class="factor-description">${f.description || ''}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+                ${battleAnalysis.winReason ? `
+                    <div class="win-reason">
+                        <strong>Summary:</strong> ${battleAnalysis.winReason}
+                    </div>
+                ` : ''}
+            </div>
+        ` : '';
+
         this.overviewContent.innerHTML = `
             <!-- Performance Grade - Make it prominent -->
             <div class="stat-card highlight" style="grid-column: 1 / -1;">
                 <div class="grade-badge large" style="border-color: ${grade.color}; color: ${grade.color};">${grade.grade}</div>
                 <div class="value" style="font-size: 1.2rem;">${grade.label} Performance</div>
                 <div class="label">Based on damage efficiency and casualty ratios</div>
+                ${squadTypeBadge ? `<div style="margin-top: 10px;">${squadTypeBadge}</div>` : ''}
             </div>
 
             <!-- Side A Stats -->
@@ -318,9 +353,11 @@ class BattleAnalyzerApp {
                 <div class="label">Side B Damage</div>
             </div>
 
+            ${battleAnalysisHtml}
+
             ${analysis.notes ? `
                 <div class="stat-card analysis-notes" style="grid-column: 1 / -1;">
-                    <div class="icon">Analysis</div>
+                    <div class="icon">Notes</div>
                     <div class="label" style="text-align: left; white-space: pre-wrap; font-size: 0.95rem; line-height: 1.5;">${analysis.notes}</div>
                 </div>
             ` : ''}
@@ -466,20 +503,150 @@ class BattleAnalyzerApp {
             return;
         }
 
-        this.heroesContent.innerHTML = heroes.map(hero => `
-            <div class="hero-card">
-                <div class="hero-header">
-                    <div class="hero-avatar">${hero.side === 'player' ? 'P' : 'E'}</div>
-                    <div>
-                        <div class="hero-name">${hero.name || 'Unknown Hero'}</div>
-                        <div class="hero-level">Level ${hero.level || '?'} ${'*'.repeat(hero.stars || 0)}</div>
+        this.heroesContent.innerHTML = heroes.map(hero => {
+            // Exclusive weapon display
+            const weapon = hero.exclusiveWeapon;
+            const weaponHtml = weapon && weapon.name ? `
+                <div class="exclusive-weapon">
+                    ${weapon.name}
+                    ${weapon.level ? ` Lv.${weapon.level}` : ''}
+                    ${weapon.stars ? `<span class="weapon-stars">${'*'.repeat(weapon.stars)}</span>` : ''}
+                </div>
+            ` : '';
+
+            // Red gear count display
+            const redGearHtml = hero.redGearCount != null && hero.redGearCount > 0 ? `
+                <span class="red-gear-count">
+                    <span class="gear-icon">*</span>${hero.redGearCount}/6 Red Gear
+                </span>
+            ` : '';
+
+            // Hero power display
+            const powerHtml = hero.power ? `
+                <div class="hero-power">Power: ${this.formatNumber(hero.power)}</div>
+            ` : '';
+
+            return `
+                <div class="hero-card">
+                    <div class="hero-header">
+                        <div class="hero-avatar">${hero.side === 'player' ? 'A' : 'B'}</div>
+                        <div>
+                            <div class="hero-name">${hero.name || 'Unknown Hero'}</div>
+                            <div class="hero-level">Level ${hero.level || '?'} ${'*'.repeat(hero.stars || 0)}</div>
+                            ${powerHtml}
+                        </div>
+                    </div>
+                    <div class="hero-stats-row">
+                        ${weaponHtml}
+                        ${redGearHtml}
+                    </div>
+                    <div class="hero-skills">
+                        ${(hero.skills || []).map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
                     </div>
                 </div>
-                <div class="hero-skills">
-                    ${(hero.skills || []).map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+            `;
+        }).join('');
+    }
+
+    renderArmy(analysis) {
+        const armyDetails = analysis.armyDetails;
+
+        if (!armyDetails || (!armyDetails.player && !armyDetails.opponent)) {
+            this.armyContent.innerHTML = `
+                <div class="army-no-data">
+                    <p>No Army data available in this screenshot</p>
+                    <p style="font-size: 0.9rem; margin-top: 10px;">Upload a screenshot of the Army tab to see detailed breakdowns</p>
                 </div>
+            `;
+            return;
+        }
+
+        const renderArmyColumn = (data, title) => {
+            if (!data) {
+                return `
+                    <div class="army-column">
+                        <h4>${title}</h4>
+                        <p class="no-data">Not visible in screenshots</p>
+                    </div>
+                `;
+            }
+
+            // Drone section
+            const drone = data.drone;
+            const droneHtml = drone ? `
+                <div class="drone-card">
+                    <h5>Drone ${drone.level ? `(Level ${drone.level})` : ''}</h5>
+                    ${drone.attributeBoosts ? `
+                        <div class="drone-attributes">
+                            <div class="drone-attr">
+                                <div class="attr-label">ATK</div>
+                                <div class="attr-value">+${this.formatNumber(drone.attributeBoosts.attack || 0)}</div>
+                            </div>
+                            <div class="drone-attr">
+                                <div class="attr-label">DEF</div>
+                                <div class="attr-value">+${this.formatNumber(drone.attributeBoosts.defense || 0)}</div>
+                            </div>
+                            <div class="drone-attr">
+                                <div class="attr-label">HP</div>
+                                <div class="attr-value">+${this.formatNumber(drone.attributeBoosts.hp || 0)}</div>
+                            </div>
+                        </div>
+                    ` : ''}
+                    ${drone.skillChip && drone.skillChip.name ? `
+                        <div class="skill-chip">
+                            ${drone.skillChip.name} ${'*'.repeat(drone.skillChip.stars || 0)}
+                        </div>
+                    ` : ''}
+                </div>
+            ` : '';
+
+            // Army stats
+            const stats = [
+                { label: 'Tech', value: data.tech?.power },
+                { label: 'Decoration', value: data.decoration?.power },
+                { label: 'Units', value: data.units?.power },
+                { label: 'Wall of Honor', value: data.wallOfHonor?.power },
+                { label: 'Overlord', value: data.overlord?.power, extra: data.overlord?.level ? ` (Lv.${data.overlord.level})` : '' },
+                { label: 'Tactics Cards', value: data.tacticsCards?.power },
+                { label: 'Cosmetics', value: data.cosmetics?.power }
+            ];
+
+            const statsHtml = stats.map(stat => {
+                const value = stat.value;
+                if (value === null || value === undefined || value === 0) {
+                    return `
+                        <div class="army-stat">
+                            <span class="label">${stat.label}</span>
+                            <span class="value" style="color: var(--text-muted);">-</span>
+                        </div>
+                    `;
+                }
+                return `
+                    <div class="army-stat">
+                        <span class="label">${stat.label}${stat.extra || ''}</span>
+                        <span class="value">${this.formatNumber(value)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <div class="army-column">
+                    <h4>${title}</h4>
+                    ${droneHtml}
+                    ${statsHtml}
+                </div>
+            `;
+        };
+
+        const sideAName = analysis.player?.name || 'Side A';
+        const sideBName = analysis.opponent?.name || 'Side B';
+
+        this.armyContent.innerHTML = `
+            <div class="army-comparison">
+                ${renderArmyColumn(armyDetails.player, sideAName)}
+                ${renderArmyColumn(armyDetails.opponent, sideBName)}
             </div>
-        `).join('');
+        `;
     }
 
     // Smart Insights

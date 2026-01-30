@@ -1275,3 +1275,331 @@ body {
     font-size: 0.85rem;
     word-break: break-word;
 }
+
+/* Army Comparison Grid */
+.army-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.army-column {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+}
+
+.army-column h4 {
+    color: var(--accent-info);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.army-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.army-stat:last-child {
+    border-bottom: none;
+}
+
+.army-stat .label {
+    color: var(--text-secondary);
+}
+
+.army-stat .value {
+    color: var(--accent-secondary);
+    font-weight: 600;
+}
+
+/* Drone Card */
+.drone-card {
+    background: var(--bg-tertiary);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent-info);
+}
+
+.drone-card h5 {
+    color: var(--accent-info);
+    margin-bottom: 10px;
+}
+
+.attribute-bar {
+    height: 8px;
+    background: var(--border-color);
+    border-radius: 4px;
+    margin: 5px 0;
+    overflow: hidden;
+}
+
+.attribute-fill {
+    height: 100%;
+    background: var(--accent-primary);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.drone-attributes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.drone-attr {
+    text-align: center;
+    padding: 8px;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+}
+
+.drone-attr .attr-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.drone-attr .attr-value {
+    font-weight: 600;
+    color: var(--accent-secondary);
+}
+
+.skill-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: rgba(139, 92, 246, 0.2);
+    border-radius: 12px;
+    font-size: 0.85rem;
+    color: #a78bfa;
+    margin-top: 10px;
+}
+
+/* Hero Enhancements */
+.hero-power {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.exclusive-weapon {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(135deg, #ffd700, #ffec80);
+    color: #000;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.exclusive-weapon .weapon-stars {
+    color: #b8860b;
+}
+
+.red-gear-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #ef4444;
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin-left: 10px;
+}
+
+.red-gear-count .gear-icon {
+    font-size: 0.9rem;
+}
+
+.hero-stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Battle Analysis Section */
+.battle-analysis {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+}
+
+.battle-analysis h4 {
+    color: var(--accent-secondary);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.winner-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.winner-badge.player {
+    background: rgba(74, 222, 128, 0.2);
+    color: var(--accent-success);
+}
+
+.winner-badge.opponent {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--accent-danger);
+}
+
+.key-factors {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.factor-item {
+    padding: 12px 15px;
+    margin: 0;
+    border-left: 3px solid var(--accent-primary);
+    background: var(--bg-tertiary);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.factor-item.factor-high {
+    border-color: #ef4444;
+}
+
+.factor-item.factor-medium {
+    border-color: #f7c548;
+}
+
+.factor-item.factor-low {
+    border-color: #4ade80;
+}
+
+.factor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.factor-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.factor-impact {
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.factor-impact.high {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.factor-impact.medium {
+    background: rgba(247, 197, 72, 0.2);
+    color: #f7c548;
+}
+
+.factor-impact.low {
+    background: rgba(74, 222, 128, 0.2);
+    color: #4ade80;
+}
+
+.factor-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.win-reason {
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(247, 197, 72, 0.1));
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--accent-primary);
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.win-reason strong {
+    color: var(--text-primary);
+}
+
+/* Squad Type Badge */
+.squad-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.squad-type-badge.tank {
+    background: rgba(96, 165, 250, 0.2);
+    color: #60a5fa;
+}
+
+.squad-type-badge.aircraft {
+    background: rgba(139, 92, 246, 0.2);
+    color: #a78bfa;
+}
+
+.squad-type-badge.missile {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+}
+
+.squad-type-badge.mixed {
+    background: rgba(247, 197, 72, 0.2);
+    color: #f7c548;
+}
+
+/* Army Content */
+.army-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.army-no-data {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+}
+
+/* Responsive for Army Grid */
+@media (max-width: 768px) {
+    .army-comparison {
+        grid-template-columns: 1fr;
+    }
+
+    .drone-attributes {
+        grid-template-columns: 1fr;
+    }
+}
