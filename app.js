@@ -308,6 +308,7 @@ class BattleAnalyzerApp {
                     </div>
                 ` : ''}
                 ${this.renderStatAdvantages(battleAnalysis.statAdvantages)}
+                ${this.renderPowerHierarchy(battleAnalysis.powerHierarchyAnalysis)}
             </div>
         ` : '';
 
@@ -366,6 +367,92 @@ class BattleAnalyzerApp {
             ` : ''}
             <button class="toggle-raw" onclick="app.toggleRawData()">Show Raw Data</button>
             <div class="raw-data" id="rawData" style="display: none;">${JSON.stringify(analysis, null, 2)}</div>
+        `;
+    }
+
+    renderPowerHierarchy(hierarchy) {
+        if (!hierarchy) return '';
+
+        // Star level comparison section
+        const starComp = hierarchy.starLevelComparison;
+        const starHtml = starComp ? `
+            <div class="hierarchy-section">
+                <h6>Star Level Comparison
+                    ${starComp.impact ? `<span class="impact-badge ${(starComp.impact || 'medium').toLowerCase()}">${starComp.impact} Impact</span>` : ''}
+                </h6>
+                <p style="color: var(--text-secondary); font-size: 0.85rem;">${starComp.summary || 'Not analyzed'}</p>
+                ${starComp.criticalGaps && starComp.criticalGaps.length > 0 ? `
+                    <div class="star-gaps">
+                        ${starComp.criticalGaps.map(gap => `
+                            <span class="star-gap-item ${gap.includes('5') || gap.includes('6') ? 'critical' : ''}">${gap}</span>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        ` : '';
+
+        // Lucius shield effect section
+        const lucius = hierarchy.luciusShieldEffect;
+        const luciusHtml = lucius && lucius.present !== 'neither' ? `
+            <div class="hierarchy-section">
+                <h6>Lucius Shield Effect</h6>
+                <div class="lucius-shield-info">
+                    <div class="shield-stat">
+                        <span class="shield-label">Present</span>
+                        <span class="shield-value">${lucius.present === 'player' ? 'Side A' : lucius.present === 'opponent' ? 'Side B' : lucius.present}</span>
+                    </div>
+                    ${lucius.overlordDamageDiff ? `
+                        <div class="shield-stat">
+                            <span class="shield-label">Overlord Damage Diff</span>
+                            <span class="shield-value">${lucius.overlordDamageDiff}</span>
+                        </div>
+                    ` : ''}
+                    ${lucius.estimatedDamageAbsorbed ? `
+                        <div class="shield-stat">
+                            <span class="shield-label">Est. Absorbed</span>
+                            <span class="shield-value">${lucius.estimatedDamageAbsorbed}</span>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        ` : '';
+
+        // Tech vs Stars analysis
+        const tvs = hierarchy.techVsStarsAnalysis;
+        const tvsHtml = tvs ? `
+            <div class="hierarchy-section">
+                <h6>Tech Research vs Hero Stars</h6>
+                <div class="tech-vs-stars">
+                    <div class="tvs-item">
+                        <div class="tvs-label">Better Tech</div>
+                        <div class="tvs-value ${tvs.betterTechSide}">${tvs.betterTechSide === 'player' ? 'Side A' : tvs.betterTechSide === 'opponent' ? 'Side B' : 'Equal'}</div>
+                    </div>
+                    <div class="tvs-item">
+                        <div class="tvs-label">Better Stars</div>
+                        <div class="tvs-value ${tvs.betterStarsSide}">${tvs.betterStarsSide === 'player' ? 'Side A' : tvs.betterStarsSide === 'opponent' ? 'Side B' : 'Equal'}</div>
+                    </div>
+                </div>
+                ${tvs.outcome ? `<p style="color: var(--text-secondary); font-size: 0.85rem;">${tvs.outcome}</p>` : ''}
+            </div>
+        ` : '';
+
+        // Key lesson
+        const lessonHtml = hierarchy.keyLesson ? `
+            <div class="key-lesson">
+                <strong>Key Lesson:</strong> ${hierarchy.keyLesson}
+            </div>
+        ` : '';
+
+        if (!starHtml && !luciusHtml && !tvsHtml && !lessonHtml) return '';
+
+        return `
+            <div class="power-hierarchy">
+                <h5>Power Hierarchy Analysis</h5>
+                ${starHtml}
+                ${luciusHtml}
+                ${tvsHtml}
+                ${lessonHtml}
+            </div>
         `;
     }
 

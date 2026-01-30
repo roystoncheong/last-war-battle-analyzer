@@ -215,6 +215,24 @@ Please provide a detailed analysis in the following JSON format:
             "speedAdvantage": "which side's support/CC heroes acted first",
             "damageReduction": "any notable damage reduction advantages",
             "exclusiveWeaponImpact": "how exclusive weapons affected the outcome"
+        },
+        "powerHierarchyAnalysis": {
+            "starLevelComparison": {
+                "summary": "which side has higher star heroes overall",
+                "criticalGaps": ["list hero name + star gap, e.g. 'D.Va: 1-star vs 6-star'"],
+                "impact": "High/Medium/Low - how much star levels affected outcome"
+            },
+            "luciusShieldEffect": {
+                "present": "player/opponent/both/neither",
+                "overlordDamageDiff": "difference in Overlord damage taken (indicates shield absorption)",
+                "estimatedDamageAbsorbed": "estimated damage absorbed by shields"
+            },
+            "techVsStarsAnalysis": {
+                "betterTechSide": "player/opponent/equal",
+                "betterStarsSide": "player/opponent/equal",
+                "outcome": "explanation of whether tech advantage was negated by star disadvantage"
+            },
+            "keyLesson": "main takeaway for the losing side to improve"
         }
     },
     "resources": {
@@ -253,10 +271,19 @@ SQUAD META KNOWLEDGE:
 
 COMBAT STATS KNOWLEDGE:
 20. PRIMARY STATS: ATK (raw damage), DEF (reduces incoming damage - at 1.4M+ HP, small DEF gains outperform flat HP), HP (total durability, important for shield-scaling heroes like Lucius)
-21. SQUAD MULTIPLIERS: Morale (higher morale = bonus damage, e.g. 1.1x = 110% damage), March Size (more troops = more total HP/damage), Type Synergy (5 same-type heroes = 20% damage boost)
+21. SQUAD MULTIPLIERS: Morale (higher morale = bonus damage, e.g. 1.04x = 104% damage), March Size (more troops = more total HP/damage), Type Synergy (5 same-type heroes = 20% damage boost)
 22. ADVANCED STATS: Damage Increase % (superior to flat ATK), Damage Reduction % (one of most powerful defensive stats), Physical/Energy Resistance (10% reduction each from Armor/Radar gear), Speed (turn order - critical for support heroes applying CC first)
 23. HIDDEN FACTORS: Unit Tier T10 provides massive power jumps over lower tiers, Mastery Trees provide up to +30% core stats/+20% damage/+10% reduction (not shown in squad power), Exclusive Weapons add unique mechanics (e.g. Lucius shield)
-24. When analyzing battle outcome, consider: troop tier differences, morale advantages, type synergy bonuses, damage reduction vs raw HP, and whether support heroes acted before enemy damage dealers
+
+CRITICAL POWER HIERARCHY (in order of importance):
+24. HERO STAR LEVELS are THE most important factor. A 6-star hero has ~3x the base stats of a 1-star hero. The formula is: Final Stat = Base Stat × (1 + Tech Boost) × Star Multiplier. A 1-star D.Va with +80% tech boost will STILL lose to a 6-star D.Va with +68% tech boost because base stats dominate.
+25. LUCIUS SHIELDS: Lucius's shield absorbs damage BEFORE it reaches heroes/Overlord. Check Overlord damage taken - if one side's Overlord took significantly more damage, the other side likely had Lucius absorbing hits. A 7-8M damage difference in Overlord damage taken indicates shield mechanics at work.
+26. RAW STAT BONUSES from Decorations (+HP, +ATK, +DEF flat values) compound with percentages
+27. DAMAGE REDUCTION % stacking (Aircraft Damage Reduction, Overall Damage Reduction) provides consistent mitigation
+28. TECH RESEARCH BOOSTS are percentage multipliers - they CANNOT overcome large star level gaps. Better tech on worse heroes will still lose to worse tech on better heroes.
+29. MORALE ADVANTAGE (e.g., 1.04x = 4% more damage) is the LEAST impactful - it cannot overcome hero quality differences
+
+KEY INSIGHT: You cannot out-research a player with higher star heroes. Invest in hero stars before pushing tech research. When analyzing why someone lost despite having better tech/morale, check their hero star levels first.
 
 Respond ONLY with the JSON object, no additional text.`;
 
@@ -474,6 +501,24 @@ Please provide a detailed analysis in the following JSON format:
             "speedAdvantage": "which side's support/CC heroes acted first",
             "damageReduction": "any notable damage reduction advantages",
             "exclusiveWeaponImpact": "how exclusive weapons affected the outcome"
+        },
+        "powerHierarchyAnalysis": {
+            "starLevelComparison": {
+                "summary": "which side has higher star heroes overall",
+                "criticalGaps": ["list hero name + star gap, e.g. 'D.Va: 1-star vs 6-star'"],
+                "impact": "High/Medium/Low - how much star levels affected outcome"
+            },
+            "luciusShieldEffect": {
+                "present": "player/opponent/both/neither",
+                "overlordDamageDiff": "difference in Overlord damage taken (indicates shield absorption)",
+                "estimatedDamageAbsorbed": "estimated damage absorbed by shields"
+            },
+            "techVsStarsAnalysis": {
+                "betterTechSide": "player/opponent/equal",
+                "betterStarsSide": "player/opponent/equal",
+                "outcome": "explanation of whether tech advantage was negated by star disadvantage"
+            },
+            "keyLesson": "main takeaway for the losing side to improve"
         }
     },
     "resources": {
@@ -515,10 +560,19 @@ SQUAD META KNOWLEDGE:
 
 COMBAT STATS KNOWLEDGE:
 22. PRIMARY STATS: ATK (raw damage), DEF (reduces incoming damage - at 1.4M+ HP, small DEF gains outperform flat HP), HP (total durability, important for shield-scaling heroes like Lucius)
-23. SQUAD MULTIPLIERS: Morale (higher morale = bonus damage, e.g. 1.1x = 110% damage), March Size (more troops = more total HP/damage), Type Synergy (5 same-type heroes = 20% damage boost)
+23. SQUAD MULTIPLIERS: Morale (higher morale = bonus damage, e.g. 1.04x = 104% damage), March Size (more troops = more total HP/damage), Type Synergy (5 same-type heroes = 20% damage boost)
 24. ADVANCED STATS: Damage Increase % (superior to flat ATK), Damage Reduction % (one of most powerful defensive stats), Physical/Energy Resistance (10% reduction each from Armor/Radar gear), Speed (turn order - critical for support heroes applying CC first)
 25. HIDDEN FACTORS: Unit Tier T10 provides massive power jumps over lower tiers, Mastery Trees provide up to +30% core stats/+20% damage/+10% reduction (not shown in squad power), Exclusive Weapons add unique mechanics (e.g. Lucius shield)
-26. When analyzing battle outcome, consider: troop tier differences, morale advantages, type synergy bonuses, damage reduction vs raw HP, and whether support heroes acted before enemy damage dealers
+
+CRITICAL POWER HIERARCHY (in order of importance):
+26. HERO STAR LEVELS are THE most important factor. A 6-star hero has ~3x the base stats of a 1-star hero. The formula is: Final Stat = Base Stat × (1 + Tech Boost) × Star Multiplier. A 1-star D.Va with +80% tech boost will STILL lose to a 6-star D.Va with +68% tech boost because base stats dominate.
+27. LUCIUS SHIELDS: Lucius's shield absorbs damage BEFORE it reaches heroes/Overlord. Check Overlord damage taken - if one side's Overlord took significantly more damage, the other side likely had Lucius absorbing hits. A 7-8M damage difference in Overlord damage taken indicates shield mechanics at work.
+28. RAW STAT BONUSES from Decorations (+HP, +ATK, +DEF flat values) compound with percentages
+29. DAMAGE REDUCTION % stacking (Aircraft Damage Reduction, Overall Damage Reduction) provides consistent mitigation
+30. TECH RESEARCH BOOSTS are percentage multipliers - they CANNOT overcome large star level gaps. Better tech on worse heroes will still lose to worse tech on better heroes.
+31. MORALE ADVANTAGE (e.g., 1.04x = 4% more damage) is the LEAST impactful - it cannot overcome hero quality differences
+
+KEY INSIGHT: You cannot out-research a player with higher star heroes. Invest in hero stars before pushing tech research. When analyzing why someone lost despite having better tech/morale, check their hero star levels first.
 
 Respond ONLY with the JSON object, no additional text.`;
 
