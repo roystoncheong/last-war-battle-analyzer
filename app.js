@@ -441,17 +441,76 @@ class BattleAnalyzerApp {
             </div>
         ` : '';
 
-        if (!typeAdvHtml && !posIssuesHtml && !perfNotesHtml && !skillEffHtml) {
+        // Squad composition analysis
+        const squadComp = strat.squadComposition;
+        const squadCompHtml = squadComp ? `
+            <div class="squad-composition">
+                <h5>Squad Composition Analysis</h5>
+                <div class="squad-comp-grid">
+                    ${this.renderSquadCompCard(squadComp.player, 'Side A')}
+                    ${this.renderSquadCompCard(squadComp.opponent, 'Side B')}
+                </div>
+            </div>
+        ` : '';
+
+        if (!typeAdvHtml && !posIssuesHtml && !perfNotesHtml && !skillEffHtml && !squadCompHtml) {
             return '';
         }
 
         return `
             <div class="strategic-analysis" style="grid-column: 1 / -1;">
                 <h4>Strategic Analysis</h4>
+                ${squadCompHtml}
                 ${typeAdvHtml}
                 ${posIssuesHtml}
                 ${perfNotesHtml}
                 ${skillEffHtml}
+            </div>
+        `;
+    }
+
+    renderSquadCompCard(comp, sideName) {
+        if (!comp) {
+            return `
+                <div class="squad-comp-card">
+                    <h6>${sideName}</h6>
+                    <p class="no-data" style="font-size: 0.85rem;">Not analyzed</p>
+                </div>
+            `;
+        }
+
+        const spendingClass = (comp.spendingTier || '').toLowerCase().replace(/[\s-]/g, '-');
+
+        const missingHtml = comp.missingKeyHeroes && comp.missingKeyHeroes.length > 0 ? `
+            <div class="missing-heroes">
+                <div class="label">Missing Key Heroes</div>
+                <div class="hero-list">${comp.missingKeyHeroes.join(', ')}</div>
+            </div>
+        ` : '';
+
+        const suboptimalHtml = comp.suboptimalChoices && comp.suboptimalChoices.length > 0 ? `
+            <div class="suboptimal-choices">
+                <div class="label">Suboptimal Choices</div>
+                <div class="hero-list">${comp.suboptimalChoices.join(', ')}</div>
+            </div>
+        ` : '';
+
+        return `
+            <div class="squad-comp-card">
+                <h6>
+                    ${sideName}
+                    ${comp.spendingTier ? `<span class="spending-tier ${spendingClass}">${comp.spendingTier}</span>` : ''}
+                </h6>
+                <div class="squad-comp-row">
+                    <span class="comp-label">Squad Type</span>
+                    <span class="comp-value">${comp.detectedType || 'Unknown'}</span>
+                </div>
+                <div class="squad-comp-row">
+                    <span class="comp-label">Meta Match</span>
+                    <span class="comp-value">${comp.optimalLineupMatch || 'Unknown'}</span>
+                </div>
+                ${missingHtml}
+                ${suboptimalHtml}
             </div>
         `;
     }

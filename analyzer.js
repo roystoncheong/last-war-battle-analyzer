@@ -154,7 +154,23 @@ Please provide a detailed analysis in the following JSON format:
         ],
         "skillEfficacy": [
             { "skill": "skill name", "hero": "hero name", "impact": "High/Medium/Low", "description": "how the skill affected the battle" }
-        ]
+        ],
+        "squadComposition": {
+            "player": {
+                "detectedType": "Tank/Aircraft/Missile/Mixed",
+                "spendingTier": "F2P/Mid-Spender/Whale",
+                "optimalLineupMatch": "percentage or description of how close to meta",
+                "missingKeyHeroes": ["heroes that would improve the squad"],
+                "suboptimalChoices": ["heroes that don't fit the squad type"]
+            },
+            "opponent": {
+                "detectedType": "Tank/Aircraft/Missile/Mixed",
+                "spendingTier": "F2P/Mid-Spender/Whale",
+                "optimalLineupMatch": "percentage or description",
+                "missingKeyHeroes": [],
+                "suboptimalChoices": []
+            }
+        }
     },
     "armyDetails": {
         "player": {
@@ -218,9 +234,14 @@ HERO PERFORMANCE ANALYSIS:
 13. Identify skill activations that significantly impacted the battle (shields from Lucius/Williams, control effects, etc.)
 
 STRATEGIC ANALYSIS:
-14. Evaluate type counter advantages: Tanks > Aircraft > Missiles > Tanks. Note which side had favorable matchups
+14. Evaluate type counter advantages using this cycle: Tanks beat Missiles (20% damage reduction), Aircraft beat Tanks (20% bonus damage), Missiles beat Aircraft (20% bonus damage)
 15. Identify positioning issues: support/defense heroes in wrong rows, attackers on frontline taking too much damage
-16. Known hero matchups: Stetman excels vs tank-heavy, Mason excels vs aircraft, etc.
+
+SQUAD META KNOWLEDGE:
+16. TANK SQUAD (F2P Friendly): Optimal lineup is Williams + Murphy (Front), Kimberly + Stetmann + Marshall (Back). Key advantage is high survivability + Kimberly AoE. Weak to Aircraft squads.
+17. AIRCRAFT SQUAD (Mid-Spender Meta): Optimal lineup is Lucius + Carlie (Front), D.Va + Morrison + Schuyler (Back). D.Va is top-tier nuke damage. Weak to Missile squads.
+18. MISSILE SQUAD (Whale Meta): Optimal lineup is Adam + McGregor (Front), Fiona + Tesla + Swift (Back). Excels at backline elimination and boss damage. Weak to Tank squads.
+19. Compare detected squad composition against optimal lineups and note deviations or suboptimal hero choices.
 
 Respond ONLY with the JSON object, no additional text.`;
 
@@ -377,7 +398,23 @@ Please provide a detailed analysis in the following JSON format:
         ],
         "skillEfficacy": [
             { "skill": "skill name", "hero": "hero name", "impact": "High/Medium/Low", "description": "how the skill affected the battle" }
-        ]
+        ],
+        "squadComposition": {
+            "player": {
+                "detectedType": "Tank/Aircraft/Missile/Mixed",
+                "spendingTier": "F2P/Mid-Spender/Whale",
+                "optimalLineupMatch": "percentage or description of how close to meta",
+                "missingKeyHeroes": ["heroes that would improve the squad"],
+                "suboptimalChoices": ["heroes that don't fit the squad type"]
+            },
+            "opponent": {
+                "detectedType": "Tank/Aircraft/Missile/Mixed",
+                "spendingTier": "F2P/Mid-Spender/Whale",
+                "optimalLineupMatch": "percentage or description",
+                "missingKeyHeroes": [],
+                "suboptimalChoices": []
+            }
+        }
     },
     "armyDetails": {
         "player": {
@@ -444,9 +481,14 @@ HERO PERFORMANCE ANALYSIS:
 15. Identify skill activations that significantly impacted the battle (shields from Lucius/Williams, control effects, etc.)
 
 STRATEGIC ANALYSIS:
-16. Evaluate type counter advantages: Tanks > Aircraft > Missiles > Tanks. Note which side had favorable matchups
+16. Evaluate type counter advantages using this cycle: Tanks beat Missiles (20% damage reduction), Aircraft beat Tanks (20% bonus damage), Missiles beat Aircraft (20% bonus damage)
 17. Identify positioning issues: support/defense heroes in wrong rows, attackers on frontline taking too much damage
-18. Known hero matchups: Stetman excels vs tank-heavy, Mason excels vs aircraft, etc.
+
+SQUAD META KNOWLEDGE:
+18. TANK SQUAD (F2P Friendly): Optimal lineup is Williams + Murphy (Front), Kimberly + Stetmann + Marshall (Back). Key advantage is high survivability + Kimberly AoE. Weak to Aircraft squads.
+19. AIRCRAFT SQUAD (Mid-Spender Meta): Optimal lineup is Lucius + Carlie (Front), D.Va + Morrison + Schuyler (Back). D.Va is top-tier nuke damage. Weak to Missile squads.
+20. MISSILE SQUAD (Whale Meta): Optimal lineup is Adam + McGregor (Front), Fiona + Tesla + Swift (Back). Excels at backline elimination and boss damage. Weak to Tank squads.
+21. Compare detected squad composition against optimal lineups and note deviations or suboptimal hero choices.
 
 Respond ONLY with the JSON object, no additional text.`;
 
